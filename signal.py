@@ -95,6 +95,10 @@ class Signal(object):
 
         return np.fft.fft(self.x, self.L if Nfft <= 0 else Nfft)
 
+    def zeropole():
+
+    def convolve():
+
     def export(self, name):
 
         wavwrite(name, self.Fs, self.x)
