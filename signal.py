@@ -3,7 +3,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from scipy.io.wavfile import read as wavread, write as wavwrite
-from scipy.signal import spectrogram
+from scipy.signal import spectrogram, freqz
+from scipy.linalg import toeplitz, solve_toeplitz, inv
 
 class Signal(object):
 
@@ -95,9 +96,46 @@ class Signal(object):
 
         return np.fft.fft(self.x, self.L if Nfft <= 0 else Nfft)
 
-    def zeropole():
+    def lpc(self):
 
-    def convolve():
+        M = 20
+
+        window = self.x[11000:11400]
+
+        rho = np.correlate(window, window, "full")
+        
+        stimate = rho[len(rho)//2:(len(rho)//2 + M)]
+
+        mat = toeplitz(stimate[:(M-1)])
+
+        x = inv(mat).dot(stimate[1:])
+
+        print("a: {}\n".format(x))
+
+        # Gain
+        gain = stimate[0]
+
+        for i in range(1, len(x)):
+            gain += stimate[i] * x[i]
+
+        print("Gain: {}\n".format(gain))
+
+        w, h = freqz([gain], [1] + x)
+
+        # Plot frequency
+        fig, ax = plt.subplots()
+
+        fig.suptitle("Freq")
+        ax.plot(w*self.Fs, np.abs(h))
+        ax.set(xlabel='Frequecy [Hz]', ylabel='Energy')
+
+        plt.savefig("{}.png".format("freq-lpc"))
+
+    def zeropole(self):
+        return 0
+
+    def convolve(self):
+        return 0
 
     def export(self, name):
 
