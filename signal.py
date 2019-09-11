@@ -120,14 +120,26 @@ class Signal(object):
 
         print("Gain: {}\n".format(gain))
 
-        w, h = freqz([gain], [1] + x)
+        # Frequecy from the Filter
+        w, h = freqz([gain], [1] + list(x*(-1)))
+
+        # Frequecy from the FFT of the window
+        window_fft = np.fft.fft(window, len(window)) / len(window)
+        window_fft = window_fft[range(len(window) // 2)]
+
+        k = np.arange(len(window) // 2)
+        frq = k * self.Fs / len(window)
 
         # Plot frequency
-        fig, ax = plt.subplots()
+        fig, (ax, ay) = plt.subplots(2)
 
         fig.suptitle("Freq")
-        ax.plot(w*self.Fs, np.abs(h))
+        
+        ax.plot(w*self.Fs/(2*np.pi), np.abs(h))
         ax.set(xlabel='Frequecy [Hz]', ylabel='Energy')
+
+        ay.plot(frq, np.abs(window_fft))
+        ay.set(xlabel='Frequecy [Hz]', ylabel='Energy')
 
         plt.savefig("{}.png".format("freq-lpc"))
 
