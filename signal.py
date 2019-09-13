@@ -38,32 +38,39 @@ class Signal(object):
         self.L = np.size(self.x)
         self.t = np.arange(self.L) / self.Fs + t0
 
-    def plot(self, title='Time plot', name='time-plot'):
+    def _fft(self, x, Nfft=0):
+        
+        L = len(x)
+
+        return np.fft.fft(x, L if Nfft <= 0 else Nfft) / L
+
+    def _plot(self, X, Y, title=None, name=None, xlabel=None, ylabel=None):
 
         fig, ax = plt.subplots()
         
         fig.suptitle(title)
-        ax.plot(self.t, self.x)
-        ax.set(xlabel='Time [s]', ylabel='Amplitud')
+        ax.plot(X, Y)
+        ax.set(xlabel=xlabel, ylabel=ylabel)
 
         plt.savefig("{}.png".format(name))
 
+    def get_samples(self):
+
+        return self.x
+
+    def plot(self, title='Time plot', name='time-plot'):
+
+        self._plot(self.t, self.x, title, name, xlabel="Time [s]", ylabel="Amplitud")
+
     def frequency(self, title='Frequecy plot', name='freq-plot'):
 
-        # Hertz
-        X = self.fft() / self.L
+        X = self._fft(self.x)
         X = X[range(self.L // 2)]
 
         k = np.arange(self.L // 2)
         frq = k * self.Fs / self.L
 
-        fig, ax = plt.subplots()
-
-        fig.suptitle(title)
-        ax.plot(frq, np.abs(X))
-        ax.set(xlabel='Frequecy [Hz]', ylabel='Energy')
-
-        plt.savefig("{}.png".format(name))
+        self._plot(frq, np.abs(X), title, name, xlabel='Frequecy [Hz]', ylabel='Energy')
 
     def spectrogram(self, title='Spectrogram plot', name='spectr-plot',
                     ax=None, window='hanning', t_window=0.025, t_overlap=0.0,
@@ -94,7 +101,7 @@ class Signal(object):
 
     def fft(self, Nfft=0):
 
-        return np.fft.fft(self.x, self.L if Nfft <= 0 else Nfft)
+        return self._fft(self.x, Nfft)
 
     def lpc(self, M=20, plot_samples=False):
 
@@ -135,7 +142,7 @@ class Signal(object):
             w, h = freqz([gain], [1] + list(a*(-1)))
 
             # Frequecy from the FFT of the window
-            window_fft = np.fft.fft(window, len(window)) / len(window)
+            window_fft = self._fft(window, len(window))
             window_fft = window_fft[range(len(window) // 2)]
 
             # Save sample results
@@ -173,11 +180,13 @@ class Signal(object):
 
         return res
 
-    def zeropole(self):
-        return 0
+    def convolve(self, s, mode="full"):
+        
+        x = s.get_samples()
 
-    def convolve(self):
-        return 0
+        conv = np.convolve(self.x, x, mode)
+
+        return Signal(conv, self.Fs)
 
     def export(self, name):
 
