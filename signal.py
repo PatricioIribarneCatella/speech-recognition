@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 
 from scipy.io.wavfile import read as wavread, write as wavwrite
 from scipy.signal import spectrogram, freqz
-from scipy.linalg import toeplitz, solve_toeplitz, inv
+from scipy.linalg import toeplitz, inv
 
 class Signal(object):
 
@@ -96,9 +96,7 @@ class Signal(object):
 
         return np.fft.fft(self.x, self.L if Nfft <= 0 else Nfft)
 
-    def lpc(self):
-
-        M = 20
+    def lpc(self, M=20):
 
         window = self.x[11000:11400]
 
@@ -108,20 +106,20 @@ class Signal(object):
 
         mat = toeplitz(stimate[:(M-1)])
 
-        x = inv(mat).dot(stimate[1:])
+        a = inv(mat).dot(stimate[1:])
 
-        print("a: {}\n".format(x))
+        print("a: {}\n".format(a))
 
         # Gain
         gain = stimate[0]
 
-        for i in range(1, len(x)):
-            gain += stimate[i] * x[i]
+        for i in range(1, len(a)):
+            gain += stimate[i] * a[i]
 
         print("Gain: {}\n".format(gain))
 
         # Frequecy from the Filter
-        w, h = freqz([gain], [1] + list(x*(-1)))
+        w, h = freqz([gain], [1] + list(a*(-1)))
 
         # Frequecy from the FFT of the window
         window_fft = np.fft.fft(window, len(window)) / len(window)
@@ -133,11 +131,15 @@ class Signal(object):
         # Plot frequency
         fig, (ax, ay) = plt.subplots(2)
 
-        fig.suptitle("Freq")
-        
-        ax.plot(w*self.Fs/(2*np.pi), np.abs(h))
-        ax.set(xlabel='Frequecy [Hz]', ylabel='Energy')
+        plt.subplots_adjust(hspace=0.4)
 
+        fig.suptitle("Frequecy Domain plot")
+
+        ax.set_title("Frequecy for LPC coefficients filter")
+        ax.plot(w*self.Fs/(2*np.pi), np.abs(h))
+        ax.set(ylabel='Energy')
+
+        ay.set_title("Frequecy for window FFT")
         ay.plot(frq, np.abs(window_fft))
         ay.set(xlabel='Frequecy [Hz]', ylabel='Energy')
 
