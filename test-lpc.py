@@ -6,7 +6,7 @@ def main():
 
     s = Signal(path="./waves/fantasia.wav")
 
-    s.lpc()
+    r = s.lpc()
 
 if __name__ == "__main__":
     main()

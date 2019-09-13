@@ -96,54 +96,82 @@ class Signal(object):
 
         return np.fft.fft(self.x, self.L if Nfft <= 0 else Nfft)
 
-    def lpc(self, M=20):
+    def lpc(self, M=20, plot_samples=False):
 
-        window = self.x[11000:11400]
+        samples_window = round(self.Fs * 0.025)
+       
+        end_time = self.t[-1]
 
-        rho = np.correlate(window, window, "full")
-        
-        stimate = rho[len(rho)//2:(len(rho)//2 + M)]
+        res = []
 
-        mat = toeplitz(stimate[:(M-1)])
+        for offset in np.arange(0.0, end_time - 0.025, 0.010) * self.Fs:
+           
+            offset = int(offset)
 
-        a = inv(mat).dot(stimate[1:])
+            # Gets signal window at [offset:offset+samples_window)
+            window = self.x[offset:(offset + samples_window)]
+            
+            # Finds the correlation function
+            # which will be used for 'rho' stimation
+            rho = np.correlate(window, window, "full")
+            
+            # The 'M' rho stimators are taken from
+            # the middle of the correlation function
+            stimate = rho[len(rho)//2:(len(rho)//2 + M)]
 
-        print("a: {}\n".format(a))
+            # Build the 'toeplitz' matrix.
+            # Find its inverse and calculate
+            # the 'a' coefficients
+            mat = toeplitz(stimate[:(M-1)])
+            a = inv(mat).dot(stimate[1:])
 
-        # Gain
-        gain = stimate[0]
+            # Calculates the 'gain' filter parameter
+            gain = stimate[0]
 
-        for i in range(1, len(a)):
-            gain += stimate[i] * a[i]
+            for i in range(1, len(a)):
+                gain += stimate[i] * a[i]
 
-        print("Gain: {}\n".format(gain))
+            # Frequecy from the Filter
+            w, h = freqz([gain], [1] + list(a*(-1)))
 
-        # Frequecy from the Filter
-        w, h = freqz([gain], [1] + list(a*(-1)))
+            # Frequecy from the FFT of the window
+            window_fft = np.fft.fft(window, len(window)) / len(window)
+            window_fft = window_fft[range(len(window) // 2)]
 
-        # Frequecy from the FFT of the window
-        window_fft = np.fft.fft(window, len(window)) / len(window)
-        window_fft = window_fft[range(len(window) // 2)]
+            # Save sample results
+            s = {
+                "M": M,
+                "a": list(a),
+                "G": gain,
+                "H": np.abs(h),
+                "H-fft": np.abs(window_fft)
+            }
+            res.append(s)
 
-        k = np.arange(len(window) // 2)
-        frq = k * self.Fs / len(window)
+            if plot_samples:
 
-        # Plot frequency
-        fig, (ax, ay) = plt.subplots(2)
+                k = np.arange(len(window) // 2)
+                frq = k * self.Fs / len(window)
 
-        plt.subplots_adjust(hspace=0.4)
+                # Plot frequency
+                fig, (ax, ay) = plt.subplots(2)
 
-        fig.suptitle("Frequecy Domain plot")
+                plt.subplots_adjust(hspace=0.4)
 
-        ax.set_title("Frequecy for LPC coefficients filter")
-        ax.plot(w*self.Fs/(2*np.pi), np.abs(h))
-        ax.set(ylabel='Energy')
+                fig.suptitle("Frequecy Domain plot - offset: {}".format(offset))
 
-        ay.set_title("Frequecy for window FFT")
-        ay.plot(frq, np.abs(window_fft))
-        ay.set(xlabel='Frequecy [Hz]', ylabel='Energy')
+                ax.set_title("Frequecy for LPC coefficients filter")
+                ax.plot(w*self.Fs/(2*np.pi), np.abs(h))
+                ax.set(ylabel='Energy')
 
-        plt.savefig("{}.png".format("freq-lpc"))
+                ay.set_title("Frequecy for window FFT")
+                ay.plot(frq, np.abs(window_fft))
+                ay.set(xlabel='Frequecy [Hz]', ylabel='Energy')
+
+                plt.savefig("./plots/freq-lpc-offset-{}.png".format(offset))
+                plt.close(fig)
+
+        return res
 
     def zeropole(self):
         return 0
