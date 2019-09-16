@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from scipy.io.wavfile import read as wavread, write as wavwrite
-from scipy.signal import spectrogram, freqz
+from scipy.signal import spectrogram, freqz, lfilter
 from scipy.linalg import toeplitz, inv
 
 class Signal(object):
@@ -103,13 +103,14 @@ class Signal(object):
 
         return self._fft(self.x, Nfft)
 
-    def lpc(self, M=20, plot_samples=False):
+    def lpc_encode(self, M=20, plot_samples=False):
 
         samples_window = round(self.Fs * 0.025)
        
         end_time = self.t[-1]
 
         res = []
+        zi = np.zeros(19)
 
         for offset in np.arange(0.0, end_time - 0.025, 0.010) * self.Fs:
            
@@ -138,24 +139,29 @@ class Signal(object):
             for i in range(1, len(a)):
                 gain += stimate[i] * a[i]
 
-            # Frequecy from the Filter
-            w, h = freqz([gain], [1] + list(a*(-1)))
-
-            # Frequecy from the FFT of the window
-            window_fft = self._fft(window, len(window))
-            window_fft = window_fft[range(len(window) // 2)]
+            ten_samples = round(self.Fs * 0.010)
+            ten_window = window[:ten_samples]
+    
+            # filterd 10ms window
+            ten_filt, zi = lfilter([0] + list(a), [1], ten_window, zi=zi)
+            err = ten_window - ten_filt
 
             # Save sample results
             s = {
-                "M": M,
+                "x": list(err / gain),
                 "a": list(a),
-                "G": gain,
-                "H": np.abs(h),
-                "H-fft": np.abs(window_fft)
+                "G": gain
             }
             res.append(s)
 
             if plot_samples:
+
+                # Frequecy from the Filter
+                w, h = freqz([gain], [1] + list(a*(-1)))
+
+                # Frequecy from the FFT of the window
+                window_fft = self._fft(window, len(window))
+                window_fft = window_fft[range(len(window) // 2)]
 
                 k = np.arange(len(window) // 2)
                 frq = k * self.Fs / len(window)
@@ -179,6 +185,27 @@ class Signal(object):
                 plt.close(fig)
 
         return res
+
+    def lpc_decode(self, samples):
+
+        signal = np.array([])
+    
+        zi = np.zeros(19)
+
+        for s in samples:
+
+            gain = s["G"]
+            a = np.array(s["a"])
+            x = s["x"]
+
+            win, zi = lfilter([1], [1] + list(a*(-1)), np.array(x) * gain, zi=zi)
+
+            signal = np.concatenate((signal, win))
+
+        self.x = np.array(signal)
+        self.Fs = 16000
+        self.L = np.size(self.x)
+        self.t = np.arange(self.L) / self.Fs
 
     def convolve(self, s, mode="full"):
         

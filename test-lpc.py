@@ -5,8 +5,13 @@ from signal import Signal
 def main():
 
     s = Signal(path="./waves/fantasia.wav")
+    s.plot(name="original")
+    r = s.lpc_encode()
 
-    r = s.lpc()
+    new = Signal()
+    new.lpc_decode(r)
+    new.export("new.wav")
+    new.plot(name="new")
 
 if __name__ == "__main__":
     main()
