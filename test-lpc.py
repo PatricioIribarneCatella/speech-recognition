@@ -6,10 +6,10 @@ def main():
 
     s = Signal(path="./waves/fantasia.wav")
     s.plot(name="original")
-    r = s.lpc_encode()
+    r = s.encode()
 
     new = Signal()
-    new.lpc_decode(r)
+    new.decode(r)
     new.export("new.wav")
     new.plot(name="new")
 

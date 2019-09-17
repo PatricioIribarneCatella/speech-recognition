@@ -53,7 +53,39 @@ class Signal(object):
         ax.set(xlabel=xlabel, ylabel=ylabel)
 
         plt.savefig("{}.png".format(name))
+    
+    def _plot_samples_debug(self, plot_samples, window, a, gain, offset):
 
+        if plot_samples:
+            
+            # Frequecy from the Filter
+            w, h = freqz([gain], [1] + list(a*(-1)))
+
+            # Frequecy from the FFT of the window
+            window_fft = self._fft(window, len(window))
+            window_fft = window_fft[range(len(window) // 2)]
+
+            k = np.arange(len(window) // 2)
+            frq = k * self.Fs / len(window)
+
+            # Plot frequency
+            fig, (ax, ay) = plt.subplots(2)
+
+            plt.subplots_adjust(hspace=0.4)
+
+            fig.suptitle("Frequecy Domain plot - offset: {}".format(offset))
+
+            ax.set_title("Frequecy for LPC coefficients filter")
+            ax.plot(w*self.Fs/(2*np.pi), np.abs(h))
+            ax.set(ylabel='Energy')
+
+            ay.set_title("Frequecy for window FFT")
+            ay.plot(frq, np.abs(window_fft))
+            ay.set(xlabel='Frequecy [Hz]', ylabel='Energy')
+
+            plt.savefig("./plots/freq-lpc-offset-{}.png".format(offset))
+            plt.close(fig)
+    
     def _quantify(self, x, N):
 
         x_norm = (x - np.min(x)) / (np.max(x) - np.min(x))
@@ -109,7 +141,11 @@ class Signal(object):
 
         return self._fft(self.x, Nfft)
 
-    def lpc_encode(self, M=20, plot_samples=False):
+    def encode(self, M=20, N=8, plot_samples=False):
+
+        """
+            It uses LPC (Linear Predictive Coding)
+        """
 
         samples_window = round(self.Fs * 0.025)
        
@@ -152,7 +188,7 @@ class Signal(object):
             ten_filt, zi = lfilter([0] + list(a), [1], ten_window, zi=zi)
             err = ten_window - ten_filt
 
-            x = self._quantify(err / gain, 3)
+            x = self._quantify(err / gain, N)
 
             # Save sample results
             s = {
@@ -160,41 +196,14 @@ class Signal(object):
                 "a": list(a),
                 "G": gain
             }
+            
             res.append(s)
 
-            if plot_samples:
-
-                # Frequecy from the Filter
-                w, h = freqz([gain], [1] + list(a*(-1)))
-
-                # Frequecy from the FFT of the window
-                window_fft = self._fft(window, len(window))
-                window_fft = window_fft[range(len(window) // 2)]
-
-                k = np.arange(len(window) // 2)
-                frq = k * self.Fs / len(window)
-
-                # Plot frequency
-                fig, (ax, ay) = plt.subplots(2)
-
-                plt.subplots_adjust(hspace=0.4)
-
-                fig.suptitle("Frequecy Domain plot - offset: {}".format(offset))
-
-                ax.set_title("Frequecy for LPC coefficients filter")
-                ax.plot(w*self.Fs/(2*np.pi), np.abs(h))
-                ax.set(ylabel='Energy')
-
-                ay.set_title("Frequecy for window FFT")
-                ay.plot(frq, np.abs(window_fft))
-                ay.set(xlabel='Frequecy [Hz]', ylabel='Energy')
-
-                plt.savefig("./plots/freq-lpc-offset-{}.png".format(offset))
-                plt.close(fig)
+            self._plot_samples_debug(plot_samples, window, a, gain, offset)
 
         return res
 
-    def lpc_decode(self, samples):
+    def decode(self, samples):
 
         signal = np.array([])
     
