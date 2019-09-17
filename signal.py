@@ -54,6 +54,12 @@ class Signal(object):
 
         plt.savefig("{}.png".format(name))
 
+    def _quantify(self, x, N):
+
+        x_norm = (x - np.min(x)) / (np.max(x) - np.min(x))
+
+        return np.floor(x_norm * (2**N)) * (np.max(x) - np.min(x)) / (2**N) + np.min(x)
+
     def get_samples(self):
 
         return self.x
@@ -103,12 +109,6 @@ class Signal(object):
 
         return self._fft(self.x, Nfft)
 
-    def _quantify(self, x, N):
-
-        x_norm = (x - np.min(x)) / (np.max(x) - np.min(x))
-
-        return round(x_norm * 2**(N-1)) * (np.max(x) - np.min(x)) / (2**(N-1)) + np.min(x)
-
     def lpc_encode(self, M=20, plot_samples=False):
 
         samples_window = round(self.Fs * 0.025)
@@ -152,7 +152,7 @@ class Signal(object):
             ten_filt, zi = lfilter([0] + list(a), [1], ten_window, zi=zi)
             err = ten_window - ten_filt
 
-            x = self._quantify(err / gain, 8)
+            x = self._quantify(err / gain, 3)
 
             # Save sample results
             s = {
