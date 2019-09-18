@@ -152,7 +152,7 @@ class Signal(object):
         end_time = self.t[-1]
 
         res = []
-        zi = np.zeros(19)
+        zi = np.zeros(M - 1)
 
         for offset in np.arange(0.0, end_time - 0.025, 0.010) * self.Fs:
            
@@ -203,11 +203,11 @@ class Signal(object):
 
         return res
 
-    def decode(self, samples):
+    def decode(self, samples, M=20):
 
         signal = np.array([])
     
-        zi = np.zeros(19)
+        zi = np.zeros(M - 1)
 
         for s in samples:
 
