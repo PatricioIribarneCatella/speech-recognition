@@ -224,6 +224,76 @@ class Signal(object):
         self.L = np.size(self.x)
         self.t = np.arange(self.L) / self.Fs
 
+    def synthesize(self):
+
+        self.Fs = 16000
+        Ts = 1/self.Fs
+        
+        # Entrada: tren de impulsos
+        F0 = 130
+        t = np.arange(self.Fs) * Ts
+        p = np.zeros(len(t))
+        for i in range(len(p)):
+            p[i] = 1 if i % F0 == 0 else 0
+        
+        self._plot(t, p, xlabel="t", name="p(n)", title="p")
+
+        # Modelo del tracto vocal
+        Fk_sigmak = np.array([(660, 60),(1720, 100),(2410, 120),(3500, 175),(4500, 250)])
+        
+        filters = []
+        for Fk, sigmak in Fk_sigmak:
+            rho = np.exp(-2 * np.pi * sigmak * Ts)
+            filters.append(np.array([1, -2* rho * np.cos(2 * np.pi * Fk * Ts), rho**2]))
+
+        V = np.array(filters[0])
+        for f in range(1, len(filters)):
+            conv = np.convolve(V, filters[f])
+            V = conv
+
+        # Frequecy from the V filter
+        w, h = freqz([1], V)
+        self._plot(w*self.Fs/(2*np.pi), np.abs(h), xlabel="f", name="V", title="V(z)")
+
+        # Radiación labial
+        R = np.array([1, -0.96])
+
+        # Frequecy from the R filter
+        w, h = freqz(R, [1])
+        self._plot(w*self.Fs/(2*np.pi), np.abs(h), xlabel="f", name="R", title="R(z)")
+       
+        # Frequecy from the R/V filter
+        w, h = freqz(R, V)
+        self._plot(w*self.Fs/(2*np.pi), np.abs(h), xlabel="f", name="R.V", title="R(z)/V(z)")
+        
+        # Respuesta del modelo completo
+        # s = p * v * r == S(z) = P(z).V(z).R(z)
+ 
+        self.x = lfilter(R, V, p)
+        
+        self.L = np.size(self.x)
+        self.t = np.arange(self.L) / self.Fs
+       
+        # s(n) in time
+        self._plot(self.t, self.x, xlabel="t", ylabel="amplitud", name="P.V.R", title="P.V.R")
+
+        X = self.fft()
+        self.X = X[range(len(self.x) // 2)]
+
+        k = np.arange(len(self.x) // 2)
+        frq = k * self.Fs / len(self.x)
+        
+        # S(w) frequency
+        self._plot(frq, np.abs(X), xlabel="f", ylabel="Energy", name="S", title="S")
+
+    def cepstrum(self):
+
+        _S = log(np.abs(self.X))
+
+
+
+        return 0
+
     def convolve(self, s, mode="full"):
         
         x = s.get_samples()
