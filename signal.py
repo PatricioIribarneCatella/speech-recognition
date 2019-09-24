@@ -236,7 +236,7 @@ class Signal(object):
         for i in range(len(p)):
             p[i] = 1 if i % F0 == 0 else 0
         
-        self._plot(t, p, xlabel="t", name="p(n)", title="p")
+        self._plot(t, p, xlabel="t", name="p", title="p(n)")
 
         # Modelo del tracto vocal
         Fk_sigmak = np.array([(660, 60),(1720, 100),(2410, 120),(3500, 175),(4500, 250)])
@@ -275,7 +275,7 @@ class Signal(object):
         self.t = np.arange(self.L) / self.Fs
        
         # s(n) in time
-        self._plot(self.t, self.x, xlabel="t", ylabel="amplitud", name="P.V.R", title="P.V.R")
+        self._plot(self.t, self.x, xlabel="t", ylabel="amplitud", name="s", title="s(n)")
 
         X = self.fft()
         self.X = X[range(len(self.x) // 2)]
@@ -284,13 +284,13 @@ class Signal(object):
         frq = k * self.Fs / len(self.x)
         
         # S(w) frequency
-        self._plot(frq, np.abs(X), xlabel="f", ylabel="Energy", name="S", title="S")
+        self._plot(frq, np.abs(self.X), xlabel="f", ylabel="Energy", name="S", title="S(z)")
 
     def cepstrum(self):
 
-        _S = log(np.abs(self.X))
+        _S = np.log(np.abs(self.X))
 
-
+        
 
         return 0
 
