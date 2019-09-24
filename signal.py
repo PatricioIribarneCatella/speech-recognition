@@ -44,6 +44,10 @@ class Signal(object):
 
         return np.fft.fft(x, L if Nfft <= 0 else Nfft) / L
 
+    def _ifft(self, X):
+
+        return np.fft.ifft(X)
+
     def _plot(self, X, Y, title=None, name=None, xlabel=None, ylabel=None):
 
         fig, ax = plt.subplots()
@@ -278,21 +282,48 @@ class Signal(object):
         self._plot(self.t, self.x, xlabel="t", ylabel="amplitud", name="s", title="s(n)")
 
         X = self.fft()
-        self.X = X[range(len(self.x) // 2)]
+        self.S = X
+        X = X[range(len(self.x) // 2)]
 
         k = np.arange(len(self.x) // 2)
         frq = k * self.Fs / len(self.x)
         
-        # S(w) frequency
-        self._plot(frq, np.abs(self.X), xlabel="f", ylabel="Energy", name="S", title="S(z)")
+        # S(z) frequency
+        self._plot(frq, np.abs(X), xlabel="f", ylabel="Energy", name="S", title="S(z)")
 
-    def cepstrum(self):
+    def cepstrum(self, N=40):
 
-        _S = np.log(np.abs(self.X))
+        _S = np.log(np.abs(self.S))
 
+        _s = self._ifft(_S)
+
+        L = np.size(_s)
+        t = np.arange(L) / self.Fs
+
+        self._plot(t, np.abs(_s), xlabel="t", ylabel="amplitud", name="_s", title="_s(n)")
+
+        # Build time filter
+        # to remove the x part
+        filt = np.zeros(len(_s))
+
+        for i in range(N):
+            filt[i] = 1
+        for i in range(len(filt)-(N-1), len(filt)):
+            filt[i] = 1
+
+        _h = _s * filt
+
+        self._plot(t, np.abs(_h), xlabel="t", ylabel="amplitud", name="_h", title="_h(n)")
+
+        _H = self._fft(_h)
+        _H = np.exp(_H)
+        _H = _H[range(len(_H) // 2)]
         
-
-        return 0
+        # _H(z) frequency
+        k = np.arange(len(_h) // 2)
+        frq = k * self.Fs / len(_h)
+ 
+        self._plot(frq, np.abs(_H), xlabel="f", ylabel="Energy", name="_H", title="_H(z)")
 
     def convolve(self, s, mode="full"):
         
