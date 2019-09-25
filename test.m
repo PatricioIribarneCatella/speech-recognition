@@ -1,4 +1,4 @@
-[x, Fs] = audioread("synt.wav");
+[x, Fs] = audioread("waves/synt.wav");
 
 S = fft(x);
 freq = (0:(1/(length(S)-1)):1) .* (Fs/2);
