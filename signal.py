@@ -291,14 +291,11 @@ class Signal(object):
         # S(z) frequency
         self._plot(frq, np.abs(X), xlabel="f", ylabel="Energy", name="S", title="S(z)")
 
-    def cepstrum(self, N=40):
+    def cepstrum(self, N=80):
 
-        _S = np.log(np.abs(self.S))
+        _s = self._ifft(np.log(np.abs(self.S)))
 
-        _s = self._ifft(_S)
-
-        L = np.size(_s)
-        t = np.arange(L) / self.Fs
+        t = np.arange(len(_s)) / self.Fs
 
         self._plot(t, np.abs(_s), xlabel="t", ylabel="amplitud", name="_s", title="_s(n)")
 
