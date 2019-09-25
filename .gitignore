@@ -1,3 +1,4 @@
 *.swp
 *.png
 __pycache__/
+*.svg
