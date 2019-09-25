@@ -56,7 +56,7 @@ class Signal(object):
         ax.plot(X, Y)
         ax.set(xlabel=xlabel, ylabel=ylabel)
 
-        plt.savefig("{}.png".format(name))
+        plt.savefig("{}.svg".format(name))
     
     def _plot_samples_debug(self, plot_samples, window, a, gain, offset):
 

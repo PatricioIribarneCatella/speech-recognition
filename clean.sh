@@ -1,1 +1,1 @@
-rm -rf __pycache__/ *.png
+rm -rf __pycache__/ *.png *.svg
