@@ -1,7 +1,7 @@
 [x, Fs] = audioread("waves/synt.wav");
 
-S = fft(x);
-freq = (0:(1/(length(S)-1)):1) .* (Fs/2);
+S = fft(x, length(x)*8);
+freq = (0:(1/(length(S)-1)):1) .* (Fs);
 %plot(freq, abs(S))
 
 _s = ifft(log(abs(S)));
@@ -18,7 +18,7 @@ _h = _s .* filt;
 %plot(t, _h)
 
 _H = fft(_h);
-_H = exp(_H);
+_H = exp(abs(_H));
 %plot(freq, abs(_H)./max(abs(_H)))
 
 plot(freq, abs(_H)./max(abs(_H)), 'r', freq, abs(S)./max(abs(S)), 'b')

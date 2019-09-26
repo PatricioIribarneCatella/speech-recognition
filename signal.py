@@ -1,6 +1,9 @@
 import numpy as np
 
 from matplotlib import pyplot as plt
+from matplotlib import cm
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
 from scipy.io.wavfile import read as wavread, write as wavwrite
 from scipy.signal import spectrogram, freqz, lfilter
@@ -42,7 +45,7 @@ class Signal(object):
         
         L = len(x)
 
-        return np.fft.fft(x, L if Nfft <= 0 else Nfft) / L
+        return np.fft.fft(x, L if Nfft <= 0 else Nfft)
 
     def _ifft(self, X):
 
@@ -281,19 +284,16 @@ class Signal(object):
         # s(n) in time
         self._plot(self.t, self.x, xlabel="t", ylabel="amplitud", name="s", title="s(n)")
 
-        X = self.fft()
-        self.S = X
-        X = X[range(len(self.x) // 2)]
+    def cepstrum(self, N=80):
+        
+        S = self._fft(self.x, Nfft=8*len(self.x))
 
-        k = np.arange(len(self.x) // 2)
-        frq = k * self.Fs / len(self.x)
+        freq = np.arange(len(S)) * self.Fs / len(S)
         
         # S(z) frequency
-        self._plot(frq, np.abs(X), xlabel="f", ylabel="Energy", name="S", title="S(z)")
+        self._plot(freq, np.abs(S), xlabel="f", ylabel="Energy", name="S", title="S(z)")
 
-    def cepstrum(self, N=80):
-
-        _s = self._ifft(np.log(np.abs(self.S)))
+        _s = self._ifft(np.log(np.abs(S)))
 
         t = np.arange(len(_s)) / self.Fs
 
@@ -312,15 +312,114 @@ class Signal(object):
 
         self._plot(t, np.abs(_h), xlabel="t", ylabel="amplitud", name="_h", title="_h(n)")
 
-        _H = self._fft(_h)
-        _H = np.exp(_H)
-        _H = _H[range(len(_H) // 2)]
+        _H = np.exp(np.abs(self._fft(_h)))
         
         # _H(z) frequency
-        k = np.arange(len(_h) // 2)
-        frq = k * self.Fs / len(_h)
+        freq = np.arange(len(_H)) * self.Fs / len(_H)
  
-        self._plot(frq, np.abs(_H), xlabel="f", ylabel="Energy", name="_H", title="_H(z)")
+        self._plot(freq, np.abs(_H), xlabel="f", ylabel="Energy", name="_H", title="_H(z)")
+
+        fig, ax = plt.subplots()
+        
+        fig.suptitle("_H(z), S(z)")
+        ax.plot(freq, np.abs(S) / np.max(np.abs(S)), 'r', freq, np.abs(_H) / np.max(np.abs(_H)), 'b')
+        ax.set(xlabel="f", ylabel="Energy")
+
+        plt.savefig("{}.svg".format("_HandS"))
+
+    def _plot_cepstrogram(self, H_samples):
+
+        NF, NT = H_samples.shape
+
+        f = np.arange(NF) * self.Fs / NF
+        t = np.arange(NT) * 0.010
+
+        fig = plt.figure()
+        ax = fig.add_subplot(1,1,1)
+
+        fig.suptitle("Cepstrogram")
+        ax.pcolormesh(t, f, np.log(np.abs(H_samples)))
+        ax.plot()
+        ax.set(xlabel='Time [s]', ylabel='Frequecy [Hz]')
+        ax.set_ylim(0, self.Fs//2)
+
+        plt.savefig("{}.png".format("cepstrogram"))
+
+    def cepstrogram(self, N=80):
+
+        samples_window = round(self.Fs * 0.025)
+       
+        end_time = self.t[-1]
+
+        res = []
+
+        for offset in np.arange(0.0, end_time - 0.025, 0.010) * self.Fs:
+
+            offset = int(offset)
+
+            # Gets signal window at [offset:offset+samples_window)
+            window = self.x[offset:(offset + samples_window)]
+
+            # Gets the FFT of the window
+            S_win = self._fft(window, Nfft=8*len(window))
+
+            # Gets the cepstrum _s(n) = IFFT(log(|S|))
+            _s = self._ifft(np.log(np.abs(S_win)))
+
+            # Build time filter
+            # to remove the x part
+            filt = np.zeros(len(_s))
+
+            for i in range(N):
+                filt[i] = 1
+            for i in range(len(filt)-(N-1), len(filt)):
+                filt[i] = 1
+
+            _h = _s * filt
+
+            # Gets the FFT of the _h
+            _H = np.abs(np.exp(self._fft(_h)))
+
+            res.append(_H)
+
+        H_mat = np.array(res).T
+        self._plot_cepstrogram(H_mat)
+
+    def _plot_lpctrogram(self, H_samples):
+
+        NF, NT = H_samples.shape
+
+        f = np.arange(NF) * (self.Fs / 2) / NF
+        t = np.arange(NT) * 0.010
+
+        fig = plt.figure()
+        ax = fig.add_subplot(1,1,1)
+
+        fig.suptitle("LPC-trogram")
+        ax.pcolormesh(t, f, np.log(np.abs(H_samples)))
+        ax.plot()
+        ax.set(xlabel='Time [s]', ylabel='Frequecy [Hz]')
+        ax.set_ylim(0, self.Fs/2)
+
+        plt.savefig("{}.png".format("lpctrogram"))
+
+    def lpctrogram(self):
+
+        r = self.encode()
+        res = []
+
+        for sample in r:
+
+            gain = sample["G"]
+            a = np.array(sample["a"])
+
+            # Frequecy from the Filter
+            w, h = freqz([1], [1] + list(a*(-1)))
+
+            res.append(np.abs(h)*gain)
+        
+        H_mat = np.array(res).T
+        self._plot_lpctrogram(H_mat)
 
     def convolve(self, s, mode="full"):
         
