@@ -1,9 +1,6 @@
 import numpy as np
 
 from matplotlib import pyplot as plt
-from matplotlib import cm
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
 from scipy.io.wavfile import read as wavread, write as wavwrite
 from scipy.signal import spectrogram, freqz, lfilter
