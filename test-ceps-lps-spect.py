@@ -5,9 +5,9 @@ from signal import Signal
 def main():
 
     s = Signal(path="./waves/fantasia.wav")
-    s.spectrogram()
-    s.cepstrogram()
-    s.lpctrogram()
+    s.plot("spectrogram", name="spect", title="Spectrogram")
+    s.plot("cepstrogram", name="cepst", title="Cepstrogram")
+    s.plot("lpctrogram", name="lpct", title="LPCtrogram")
 
 if __name__ == "__main__":
     main()
