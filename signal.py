@@ -138,7 +138,8 @@ class Signal(object):
         ax.pcolormesh(t, f, np.log(np.abs(Sxx)))
         ax.set(xlabel='Time [s]', ylabel='Frequecy [Hz]')
         ax.plot()
-
+        ax.set_ylim(0, self.Fs/2)
+        
         plt.savefig("{}.png".format(name))
 
     def fft(self, Nfft=0):
@@ -354,7 +355,8 @@ class Signal(object):
 
             offset = int(offset)
 
-            # Gets signal window at [offset:offset+samples_window)
+
+# Gets signal window at [offset:offset+samples_window)
             window = self.x[offset:(offset + samples_window)]
 
             # Gets the FFT of the window
