@@ -5,6 +5,33 @@ import matplotlib.pyplot as plt
 from numpy.linalg import eig
 from scipy.linalg import inv
 
+def plot_ellipse(sigma):
+    
+    # Create ellipses
+    d, v = eig(sigma)
+    mat = v * inv(np.sqrt(np.diag(d)))
+
+    N = 200
+    t = np.arange(0, N) * (2*np.pi) / N
+
+    Y1 = np.sin(t)
+    Y2 = np.cos(t)
+
+    X2 = []
+    X1 = []
+
+    for y2, y1 in zip(Y2, Y1):
+        y = np.array([y2, y1])
+        x = mat * y.T
+        X2.append(x[0])
+        X1.append(x[1])
+
+    fig, ax = plt.subplots()
+    fig.suptitle("ellipse for sigma")
+
+    ax.plot(np.array(X2), np.array(X1))
+    plt.show()
+
 def plot(samples, means, sigma):
 
     sam_a = samples["a"]
@@ -14,11 +41,6 @@ def plot(samples, means, sigma):
     data = (sam_a.T, sam_o.T, sam_u.T)
     colors = ("red", "green", "blue")
     groups = ("a", "o", "u")
-
-    # Create ellipses
-    d, v = eig(sigma)
-
-    mat = v * inv(np.sqrt(d))
 
     # Create plot
     fig = plt.figure()
@@ -83,7 +105,8 @@ def main():
         "o": mean_o,
         "u": mean_u
     }
-    plot(samples, mean, sigma)
+    plot_ellipse(sigma)
+    #plot(samples, mean, sigma)
 
     # w1
     w1a = mean_a.T * inv(sigma)
