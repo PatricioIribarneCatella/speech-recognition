@@ -7,15 +7,15 @@ from scipy.linalg import inv
 
 def ellipse(sigma, mean, scale=1):
     
-    d, v = eig(sigma)
-    mat = v * inv(np.sqrt(np.diag(d)))
+    d, v = eig(inv(sigma))
+    mat = v @ np.sqrt(inv(np.diag(d)))
 
-    N = 200
+    N = 500
     t = np.arange(0, N) * (2*np.pi) / N
 
     Y1 = scale * np.cos(t)
     Y2 = scale * np.sin(t)
-    
+   
     Y = np.array([Y1, Y2])
 
     X = mat.dot(Y)
@@ -38,7 +38,7 @@ def plot(samples, parameters):
     data = (sam_a.T, sam_o.T, sam_u.T)
     colors = ("red", "green", "blue")
     groups = ("a", "o", "u")
-    scales = (20000, 8000, 8000)
+    scales = (2, 2, 2)
 
     # Create plot
     fig = plt.figure()
