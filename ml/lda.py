@@ -18,7 +18,7 @@ def ellipse(sigma, mean, scale=1):
    
     Y = np.array([Y1, Y2])
 
-    X = mat.dot(Y)
+    X = mat @ Y
 
     X1 = X[0]
     X2 = X[1]
@@ -52,7 +52,7 @@ def plot(samples, parameters):
         X1, X2 = ellipse(parameters["sigma"][group], parameters["mean"][group], scale=scale)
         ax.plot(X1, X2, c=color)
     
-    plt.title('A,O,U scatter')
+    plt.title('A,O,U')
     plt.legend(loc=2)
     plt.show()
 
@@ -135,19 +135,19 @@ def main():
     sigma_inv = inv(sigma).T
 
     # w1
-    w1a = sigma_inv.dot(mean_a.T)
-    w1o = sigma_inv.dot(mean_o.T)
-    w1u = sigma_inv.dot(mean_u.T)
+    w1a = sigma_inv @ mean_a.T
+    w1o = sigma_inv @ mean_o.T
+    w1u = sigma_inv @ mean_u.T
 
     # w0
-    w0a = (-0.5) * mean_a.dot(sigma_inv).dot(mean_a.T) + np.log(len(train_a)/x_tot)
-    w0o = (-0.5) * mean_o.dot(sigma_inv).dot(mean_o.T) + np.log(len(train_o)/x_tot)
-    w0u = (-0.5) * mean_u.dot(sigma_inv).dot(mean_u.T) + np.log(len(train_u)/x_tot)
+    w0a = (-0.5) * mean_a @ sigma_inv @ mean_a.T + np.log(len(train_a)/x_tot)
+    w0o = (-0.5) * mean_o @ sigma_inv @ mean_o.T + np.log(len(train_o)/x_tot)
+    w0u = (-0.5) * mean_u @ sigma_inv @ mean_u.T + np.log(len(train_u)/x_tot)
 
     # function g calc
-    ga = lambda x: w1a.dot(x) + w0a
-    go = lambda x: w1o.dot(x) + w0o
-    gu = lambda x: w1u.dot(x) + w0u     
+    ga = lambda x: w1a @ x + w0a
+    go = lambda x: w1o @ x + w0o
+    gu = lambda x: w1u @ x + w0u     
 
     positive_a = clasify(test_a, ga, go, gu, "a")
     positive_o = clasify(test_o, ga, go, gu, "o")
