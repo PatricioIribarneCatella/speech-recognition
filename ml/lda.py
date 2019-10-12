@@ -52,7 +52,7 @@ def plot(samples, parameters):
         X1, X2 = ellipse(parameters["sigma"][group], parameters["mean"][group], scale=scale)
         ax.plot(X1, X2, c=color)
     
-    plt.title('A,O,U')
+    plt.title('A,O,U - LDA')
     plt.legend(loc=2)
     plt.show()
 
