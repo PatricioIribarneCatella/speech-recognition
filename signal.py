@@ -112,7 +112,7 @@ class Signal(object):
         gain = stimate[0]
 
         for i in range(1, len(a)):
-            gain += stimate[i] * a[i]
+            gain -= stimate[i] * a[i]
 
         return gain, a
 
@@ -153,7 +153,7 @@ class Signal(object):
         # Frequecy from the Filter
         w, h = freqz([1], [1] + list(a*(-1)))
 
-        _H = np.abs(h)*gain
+        _H = np.abs(h)*np.sqrt(gain)
         
         return _H
 
@@ -290,7 +290,7 @@ class Signal(object):
 
     def cepstrogram(self):
         
-        H_mat = sampler(self.x, self.Fs, self._resolve_ceps, N=80)
+        H_mat = sampler(self.x, self.Fs, self._resolve_ceps, N=40)
         
         return H_mat
 
