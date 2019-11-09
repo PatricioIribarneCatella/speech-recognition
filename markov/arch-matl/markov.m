@@ -4,20 +4,20 @@ ST = {ST1, ST2, ST3, ST4, ST5, ST6};
 
 L = length(X);
 
-for m = 1:length(models)
+for k = 1:L
 
-    model = models(m);
-
-    a = model.trans;
-    a(a == 0) = 1E-200;
-    a = log(a);
+    Xk = X{k};
+    STk = ST{k};
 
     LH = zeros(1, L);
+    
+    for m = 1:length(models)
 
-    for k = 1:L
+        model = models(m);
 
-        Xk = X{k};
-        STk = ST{k};
+        a = model.trans;
+        a(a == 0) = 1E-200;
+        a = log(a);
 
         N = length(Xk);
         prob = 0;
@@ -29,10 +29,12 @@ for m = 1:length(models)
         end
 
         prob += a(STk(N+1), 5);
-        LH(k) = prob;
+        LH(m) = prob;
     end
-    disp(LH);
 
     [val,argmax] = max(LH);
-    printf("Model: %d, Prob: %f, X: %d\n", m, val, argmax);  
+    printf("(X, ST): %d -> Model: %d (prob: %f)\n", k, argmax, val);
 end
+
+
+
