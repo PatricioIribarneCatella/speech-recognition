@@ -28,7 +28,7 @@ numStates = max(stateSeq);
 
 cmap = hsv(numStates-1);
 
-hy(1) = plot(x(:,1),x(:,2),'y');
+hy(1) = plot(x(:,1),x(:,2),'b');
 washold = ishold; hold on;
 %set(gca,'xlim',[0 2500],'ylim',[500 3000],'dataAspectRatio',[1 1 1]);
 %set(gca,'dataAspectRatio',[1 1 1]);
