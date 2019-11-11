@@ -18,16 +18,15 @@ for k = 1:L
         a(a == 0) = 1E-200;
         a = log(a);
 
-        prob = 0;
         means = model.means;
         sigmas = model.vars;
         
-        alphamat = alpha(Xk, a, means, sigmas, Q, length(Xk));
+        [alphamat,prob] = alpha(Xk, a, means, sigmas, Q, length(Xk));
 
         % calc P(Y)
-        for q = 1:Q
-            prob += alphamat(q, 2);
-        end
+        %for q = 1:Q
+        %    prob += alphamat(q, 2);
+        %end
         
         LH(m) = prob;
     end
