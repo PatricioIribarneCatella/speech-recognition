@@ -15,19 +15,11 @@ for k = 1:L
         model = models(m);
 
         a = model.trans;
-        a(a == 0) = 1E-200;
-        a = log(a);
-
         means = model.means;
         sigmas = model.vars;
         
-        [alphamat,prob] = alpha(Xk, a, means, sigmas, Q, length(Xk));
+        [alphamat,prob] = beta(Xk, a, means, sigmas, Q, length(Xk));
 
-        % calc P(Y)
-        %for q = 1:Q
-        %    prob += alphamat(q, 2);
-        %end
-        
         LH(m) = prob;
     end
     

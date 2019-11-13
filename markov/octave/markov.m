@@ -25,7 +25,7 @@ for k = 1:L
         for i = 1:N
             mu = model.means{STk(i+1)};
             sig = model.vars{STk(i+1)};
-            prob += a(STk(i), STk(i+1)) + log_b(Xk(i,:)', mu, sig);
+            prob += a(STk(i), STk(i+1)) + logb(Xk(i,:)', mu, sig);
         end
 
         prob += a(STk(N+1), 5);
