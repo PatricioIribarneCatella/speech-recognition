@@ -1,10 +1,10 @@
-function[mat] = calcgamma(alpha, beta, N)
+function[mat] = calcgamma(alphamat, betamat, N)
 
-    mat = alpha .+ beta;
+    mat = alphamat .+ betamat;
 
     for i = 1: N
         aux = logsum(mat(:,i));
-        mat(:,i) = mat(:,i) ./ aux;
+        mat(:,i) = mat(:,i) - aux;
     end
 
 end
