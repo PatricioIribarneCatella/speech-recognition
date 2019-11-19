@@ -3,6 +3,7 @@ function[res] = calctrans(xi, gammas)
     den = calcden(gammas);
 
     trans = zeros(5,5);
+    trans(trans == 0) = -200;
 
     % starts the matrix with a '1' (log(1) = 0)
     % in the a(1,2) position to make

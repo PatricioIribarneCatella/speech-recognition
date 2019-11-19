@@ -1,11 +1,8 @@
-function[mat, logprob] = beta(Y, a, means, sigmas, N, T)
+function[mat, logprob] = beta(Y, a, means, sigmas)
 
-    a(a == 0) = 1E-200;
-    a = log(a);
+    T = length(Y);
+    N = 3;
 
-    % it only contains the
-    % previous state and
-    % the current state
     betam = zeros(N, T);
 
     % initialize beta matrix
