@@ -24,6 +24,7 @@ function[newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a)
 		%%%%%%%%%%%%%%%%
 		
 		gammas = calcgamma(alphamat, betamat, N);
+		ximat = calcxi(X, alphamat, betamat, alphalogprob, trans, newmeans, newsigmas);
 
 		%%%%%%%%%%%%%%%%
 		%%%% M step %%%%
@@ -31,7 +32,6 @@ function[newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a)
 
 		newmeans = calcmu(X, gammas);
 		newsigmas = calcsigma(X, gammas, newmeans);
-		ximat = calcxi(X, alphamat, betamat, alphalogprob, trans, newmeans, newsigmas);
 		trans = calctrans(ximat, gammas);
 
 		%% update L and iterations
