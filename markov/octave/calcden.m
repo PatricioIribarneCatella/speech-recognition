@@ -5,5 +5,4 @@ function[res] = calcden(gammas)
 	for k = 1:3
 		res(k) = logsum(gammas(k,:));
 	end
-
 end

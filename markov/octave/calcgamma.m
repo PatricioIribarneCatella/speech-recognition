@@ -6,5 +6,4 @@ function[mat] = calcgamma(alphamat, betamat, N)
 		aux = logsum(mat(:,i));
 		mat(:,i) = mat(:,i) - aux;
 	end
-
 end
