@@ -1,17 +1,16 @@
 function[newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a)
 
 	% initialize variables
-	N = 3;
 	it = 0;
 
-	a(a == 0) = 1E-200;
+	a(a == 0) = 1E-100;
 	trans = log(a);
 	
 	newmeans = means;
 	newsigmas = sigmas;
 	
 	L = zeros(1,2);
-	L(2) = calcl(X, newmeans, newsigmas);
+	L(2) = calcl(X, trans, newmeans, newsigmas);
 	deltaL = L(2) - L(1);
 
 	while abs(deltaL) > 0.01
@@ -23,20 +22,20 @@ function[newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a)
 		%%%% E step %%%%
 		%%%%%%%%%%%%%%%%
 		
-		gammas = calcgamma(alphamat, betamat, N);
+		gammas = calcgamma(alphamat, betamat);
 		ximat = calcxi(X, alphamat, betamat, alphalogprob, trans, newmeans, newsigmas);
 
 		%%%%%%%%%%%%%%%%
 		%%%% M step %%%%
 		%%%%%%%%%%%%%%%%
 
+		trans = calctrans(ximat, gammas);
 		newmeans = calcmu(X, gammas);
 		newsigmas = calcsigma(X, gammas, newmeans);
-		trans = calctrans(ximat, gammas);
 
 		%% update L and iterations
 		L(1) = L(2);
-		L(2) = calcl(X, newmeans, newsigmas);
+		L(2) = calcl(X, trans, newmeans, newsigmas);
 		deltaL = L(2) - L(1);
 		it++;
 	end
