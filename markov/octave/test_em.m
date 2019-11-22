@@ -1,8 +1,26 @@
 
-X = X1;
-means = hmm1.means;
-sigmas = hmm1.vars;
-a = hmm1.trans;
+% create a new sequence from HMM4 wiht at least
+% ten or more observations in each state
+
+done = false;
+
+while !done
+	[X, ST] = genhmm(hmm4);
+	done = length(ST(ST == 2)) >= 10 && ...
+		length(ST(ST == 3)) >= 10 && ...
+		length(ST(ST == 4)) >= 10;
+end
+
+% generate first means
+m = mean(X)';
+means = {[], m, m, m, []};
+
+% generate first sigmas
+sig = cov(X);
+sigmas = {[], sig, sig, sig, []};
+
+% generate first transition matrix
+a = [0 1 0 0 0; 0 0.5 0.5 0 0; 0 0 0.5 0.5 0; 0 0 0 0.5 0; 0 0 0 0 1];
 
 [newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a);
 
