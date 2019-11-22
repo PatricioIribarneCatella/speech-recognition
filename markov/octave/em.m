@@ -13,7 +13,7 @@ function[newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a)
 	L(2) = calcl(X, trans, newmeans, newsigmas);
 	deltaL = L(2) - L(1);
 
-	while abs(deltaL) > 0.01
+	while abs(deltaL) > 0.001
 		
 		printf("Iter: %d\n", it);
 
