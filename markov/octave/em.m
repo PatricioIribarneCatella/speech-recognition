@@ -15,6 +15,8 @@ function[newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a)
 
 	while abs(deltaL) > 0.01
 		
+		printf("Iter: %d\n", it);
+
 		[alphamat, alphalogprob] = alpha(X, trans, newmeans, newsigmas);
 		[betamat, betalogprob] = beta(X, trans, newmeans, newsigmas);
 
@@ -40,3 +42,4 @@ function[newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a)
 		it++;
 	end
 end
+

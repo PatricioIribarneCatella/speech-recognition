@@ -10,8 +10,8 @@ function[res] = calcsigma(X, gammas, means)
 		aux = zeros(2,2);
 		
 		for t = 1:length(X)
-			xminm = X(t,:) - means{k+1};
-			aux += exp(gammas(k, t)) .* (xminm' * xminm);
+			xminm = X(t,:)' - means{k+1};
+			aux += exp(gammas(k, t)) .* (xminm * xminm');
 		end
 		
 		sigmas{k+1} = aux ./ exp(den(k));
