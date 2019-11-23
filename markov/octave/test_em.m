@@ -1,5 +1,5 @@
 
-% create a new sequence from HMM4 wiht at least
+% create a new sequence from HMM4 with at least
 % ten or more observations in each state
 
 done = false;
