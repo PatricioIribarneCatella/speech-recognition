@@ -6,35 +6,20 @@ L = length(X);
 
 for k = 1:L
 
-    Xk = X{k};
-    STk = ST{k};
+	Xk = X{k};
+	STk = ST{k};
 
-    LH = zeros(1, L);
-    
-    for m = 1:length(models)
+	LH = zeros(1, L);
 
-        model = models(m);
+	for m = 1:length(models)
 
-        a = model.trans;
-        a(a == 0) = 1E-200;
-        a = log(a);
+		model = models(m);
 
-        N = length(Xk);
-        prob = 0;
+		LH(m) = logprob(Xk, STk, model);
+	end
 
-        for i = 1:N
-            mu = model.means{STk(i+1)};
-            sig = model.vars{STk(i+1)};
-            prob += a(STk(i), STk(i+1)) + logb(Xk(i,:)', mu, sig);
-        end
-
-        prob += a(STk(N+1), 5);
-        LH(m) = prob;
-    end
-
-    [val,argmax] = max(LH);
-    printf("(X, ST): %d -> Model: %d (prob: %f)\n", k, argmax, val);
+	[val, argmax] = max(LH);
+	
+	printf("(X, ST): %d -> Model: %d (prob: %f)\n", k, argmax, val);
 end
-
-
 

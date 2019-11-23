@@ -1,4 +1,3 @@
-
 % create a new sequence from HMM4 with at least
 % ten or more observations in each state
 
@@ -20,7 +19,7 @@ sig = cov(X);
 sigmas = {[], sig, sig, sig, []};
 
 % generate first transition matrix
-a = [0 1 0 0 0; 0 0.5 0.5 0 0; 0 0 0.5 0.5 0; 0 0 0 0.5 0; 0 0 0 0 1];
+a = [0 1 0 0 0; 0 0.5 0.5 0 0; 0 0 0.5 0.5 0; 0 0 0 0.5 0.5; 0 0 0 0 1];
 
 [newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a);
 
