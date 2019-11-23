@@ -49,4 +49,24 @@ printf("opt: %f\n", logprob(X, _ST, HMM));
 printf("tot: %f\n", logfwd(X, HMM));
 
 % decode the sequence into models
+printf("Sequence of models: ");
 
+_ST = unique(_ST);
+idx = 1;
+
+while idx <= length(_ST)
+
+	e = _ST(idx);
+
+	if e == 2
+		printf("HMM-4 ");
+	end
+
+	if e == 5
+		printf("HMM-6");
+	end
+
+	idx += 3;
+end
+
+printf("\n");
