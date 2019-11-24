@@ -37,6 +37,11 @@ HMM.trans(8,8) = 1;
 % with VITERBI algorithm
 [_ST, _P] = logvit(X, HMM);
 
+% plots the compare between the
+% two sequence: original and Viterbi
+compseq(X, ST, _ST);
+clc;
+
 % compare probabilities
 % - real: P(X/Zv; M) - it uses the real sequence: ST
 % - opt:  P(X/~Z; M) - it uses the VITERBI sequence: _ST
@@ -51,12 +56,12 @@ printf("tot: %f\n", logfwd(X, HMM));
 % decode the sequence into models
 printf("Sequence of models: ");
 
-_ST = unique(_ST);
+_STuni = unique(_ST);
 idx = 2;
 
-while idx <= length(_ST)-1
+while idx <= length(_STuni)-1
 
-	e = _ST(idx);
+	e = _STuni(idx);
 
 	if e == 2
 		printf("HMM-4 ");
@@ -70,4 +75,5 @@ while idx <= length(_ST)-1
 end
 
 printf("\n");
+
 
