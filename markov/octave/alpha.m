@@ -1,5 +1,18 @@
 function[mat, logprob] = alpha(Y, a, means, sigmas)
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 						%%
+%% INPUT 					%%
+%%  - Y: matrix (dim: 2 x TIME) 		%%
+%%  - a: matrix (dim: 5x5) 			%%
+%%  - means: cell (dim: 5 x 2-vector) 		%%
+%%  - sigmas: cell (dim: 5 x 2x2-matrix) 	%%
+%% OUPUT 					%%
+%%  - mat: matrix (dim: STATES x TIME) 		%%
+%%  - logprob: double 				%%
+%% 						%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 	T = length(Y);
 	N = 3;
 
@@ -30,4 +43,4 @@ function[mat, logprob] = alpha(Y, a, means, sigmas)
 	logprob = logsum(alpham(:,T) + a(2:4,5));
 	mat = alpham;
 end
-    
+

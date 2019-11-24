@@ -1,20 +1,25 @@
 function[res] = calcxi(X, alphamat, betamat, logprob, a, means, sigmas)
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 						 %%
+%% INPUT 					 %%
+%%  - X: matrix (dim: 2 x TIME) 		 %%
+%%  - alphamat: matrix (dim: STATES x TIME) 	 %%
+%%  - betamat: matrix (dim: STATES x TIME) 	 %%
+%%  - logprob: double 				 %%
+%%  - a: matrix (dim: 5x5) 			 %%
+%%  - means: cell (dim: 5 x 2-vector) 		 %%
+%%  - sigmas: cell (dim: 5 x 2x2-matrix) 	 %%
+%% OUPUT 					 %%
+%%  - res: 3D-matrix (dim: 5 x 5 x TIME) 	 %%
+%% 						 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 	ximat = zeros(5, 5, length(X));
 	aux = zeros(1, 3);
 
 	for t = 2:length(X)
 		
-%		for k = 1:3
-%			aux(k) = logb(X(t,:)', means{k+1}', sigmas{k+1});
-%		end
-%		
-%		aux = aux .+ betamat(:, t)';
-%		
-%		for j = 2:4
-%			ximat(j,2:4,t) = (a(j,2:4) .+ aux) + alphamat(j-1,t-1) - logprob;
-%		end
-
 		logden = logsum(alphamat(:, t) + betamat(:,t));
 
 		for j = 2:4
@@ -27,3 +32,4 @@ function[res] = calcxi(X, alphamat, betamat, logprob, a, means, sigmas)
 
 	res = ximat;
 end
+

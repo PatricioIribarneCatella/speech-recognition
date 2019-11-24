@@ -1,5 +1,15 @@
 function[res] = calctrans(xi, gammas)
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 						%%
+%% INPUT 					%%
+%%  - xi: 3D-matrix (dim: 5 x 5 x TIME) 	%%
+%%  - gammas: matrix (dim: STATES x TIME) 	%%
+%% OUPUT 					%%
+%%  - res: matrix (dim: 5 x 5) 			%%
+%% 						%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 	den = calcden(gammas);
 
 	trans(1:5, 1:5) = -250;
@@ -43,3 +53,4 @@ function[res] = calctrans(xi, gammas)
 
 	res = trans;
 end
+
