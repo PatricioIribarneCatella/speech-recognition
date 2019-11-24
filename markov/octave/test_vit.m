@@ -52,9 +52,9 @@ printf("tot: %f\n", logfwd(X, HMM));
 printf("Sequence of models: ");
 
 _ST = unique(_ST);
-idx = 1;
+idx = 2;
 
-while idx <= length(_ST)
+while idx <= length(_ST)-1
 
 	e = _ST(idx);
 
