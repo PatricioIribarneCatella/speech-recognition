@@ -21,5 +21,12 @@ sigmas = {[], sig, sig, sig, []};
 % generate first transition matrix
 a = [0 1 0 0 0; 0 0.5 0.5 0 0; 0 0 0.5 0.5 0; 0 0 0 0.5 0.5; 0 0 0 0 1];
 
-[newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a);
+[hmmEM, gammas, it] = em(X, means, sigmas, a);
 
+% plot the sequences and its ellipsis for
+% the original model and the EM model
+figure('Name','Original model','NumberTitle','off');
+plotseq2(X, ST, hmm4);
+
+figure('Name','EM model','NumberTitle','off');
+plotseq2(X, ST, hmmEM);

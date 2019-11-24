@@ -1,4 +1,4 @@
-function[newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a)
+function[HMM, gammas, it] = em(X, means, sigmas, a)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 						%%
@@ -8,10 +8,11 @@ function[newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a)
 %%  - sigmas: cell (dim: 5 x 2x2-matrix) 	%%
 %%  - a: matrix (dim: 5x5) 			%%
 %% OUPUT 					%%
-%%  - newmeans: cell (dim: 5 x 2-vector) 	%%
-%%  - newsigmas: cell (dim: 5 x 2x2-matrix) 	%%
+%%  - HMM: object with the form: 		%%
+%%    - HMM.means: cell (dim: 5 x 2-vector) 	%%
+%%    - HMM.vars: cell (dim: 5 x 2x2-matrix) 	%%
+%%    - HMM.trans: matrix (dim: 5x5) 		%%
 %%  - gammas: matrix (dim: STATES x TIME) 	%%
-%%  - trans: matrix (dim: 5x5) 			%%
 %%  - it: integer 				%%
 %% 						%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -57,5 +58,9 @@ function[newmeans, newsigmas, gammas, trans, it] = em(X, means, sigmas, a)
 		deltaL = L(2) - L(1);
 		it++;
 	end
+
+	HMM.means = newmeans;
+	HMM.vars = newsigmas;
+	HMM.trans = exp(trans);
 end
 

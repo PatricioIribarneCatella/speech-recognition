@@ -39,6 +39,7 @@ HMM.trans(8,8) = 1;
 
 % plots the compare between the
 % two sequence: original and Viterbi
+figure('Name','Compare: Original vs Viterbi','NumberTitle','off');
 compseq(X, ST, _ST);
 clc;
 

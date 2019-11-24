@@ -5,9 +5,10 @@ function [prob] = logprob(X, ST, HMM)
 %% INPUT 					%%
 %%  - X: matrix (dim: 2 x TIME) 		%%
 %%  - ST: vector (dim: TIME) 			%%
-%%  - HMM: object (form: 			%%
-%% 		HMM = {means, vars, trans}) 	%%
-%%  - a: matrix (dim: 5x5) 			%%
+%%  - HMM: object with the form: 		%%
+%%    - HMM.means: cell (dim: 5 x 2-vector) 	%%
+%%    - HMM.vars: cell (dim: 5 x 2x2-matrix) 	%%
+%%    - HMM.trans: matrix (dim: 5x5) 		%%
 %% OUPUT 					%%
 %%  - prob: double				%%
 %% 						%%
