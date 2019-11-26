@@ -1,3 +1,6 @@
+
+inic_hmm;
+
 % the following models are used: hmm4 and hmm6
 
 % MEANS

@@ -1,3 +1,6 @@
+
+inic_hmm;
+
 % create a new sequence from HMM4 with at least
 % fifteen or more observations in each state
 
