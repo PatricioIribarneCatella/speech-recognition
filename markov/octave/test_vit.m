@@ -62,27 +62,60 @@ printf("tot: %f\n", logfwd(X, HMM));
 % decode the sequence into models
 printf("Sequence of models: ");
 
-idx = 2;
+_STr = _ST(2:end-1);
 
-while idx <= length(_ST)-1
+% puts zeros in the starts of
+% the sequences for each model
+hmm4_idx = _STr - 2;
+hmm6_idx = _STr - 5;
 
-	e = _ST(idx);
+% all the other values are put
+% to negative values
+hmm4_idx = abs(hmm4_idx) * -1;
+hmm6_idx = abs(hmm6_idx) * -1;
 
-	while e == 2 || e == 3 || e == 4
-		idx++;
-		e = _ST(idx);
+% only where there are zeros
+% (where each model begins), puts
+% the identifier of each model
+hmm4_idx(hmm4_idx == 0) = 4;
+hmm6_idx(hmm6_idx == 0) = 6;
+
+% where there are negative values
+% convert them to ones
+hmm4_idx(hmm4_idx < 0) = 1;
+hmm6_idx(hmm6_idx < 0) = 1;
+
+% multiply both arrays (value by value)
+% so the resulting array contains all
+% the sequence, for example:
+%   [6 6 6 6 0 0 0 4 4 4 4 0 0 6 6 6 0 0]
+tot = hmm4_idx .* hmm6_idx;
+tot(tot == 1) = 0;
+
+idx = 1;
+
+while idx < length(tot)
+
+	e = tot(idx);
+
+	if e == 4
+		printf("HMM-4 ");
+		while e == 4
+			e = tot(idx);
+			idx++;
+		end
 	end
 
-	printf("HMM-4 ");
-
-	while e == 5 || e == 6 || e == 7
-		idx++;
-		e = _ST(idx);
+	if e == 6
+		printf("HMM-6 ");
+		while e == 6
+			e = tot(idx);
+			idx++;
+		end
 	end
 
-	printf("HMM-6");
+	idx++;
 end
 
 printf("\n");
-
 
