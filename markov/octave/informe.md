@@ -2,6 +2,439 @@
 
 Procesamiento del Habla (66.46) - _FIUBA_
 
+## Algoritmos
+
+- **EM**
+
+```octave
+function[HMM, gammas, it] = em(X, means, sigmas, a, ST)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 												%%
+%% INPUT 										%%
+%%  - X: matrix (dim: 2 x TIME) 				%%
+%%  - means: cell (dim: 5 x 2-vector) 			%%
+%%  - sigmas: cell (dim: 5 x 2x2-matrix) 		%%
+%%  - a: matrix (dim: 5x5) 						%%
+%% OUPUT 										%%
+%%  - HMM: object with the form: 				%%
+%%    - HMM.means: cell (dim: 5 x 2-vector) 	%%
+%%    - HMM.vars: cell (dim: 5 x 2x2-matrix) 	%%
+%%    - HMM.trans: matrix (dim: 5x5) 			%%
+%%  - gammas: matrix (dim: STATES x TIME) 		%%
+%%  - it: integer 								%%
+%% 												%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	% initialize variables
+	it = 0;
+
+	a(a == 0) = 1E-100;
+	trans = log(a);
+	
+	newmeans = means;
+	newsigmas = sigmas;
+	
+	L = zeros(1,2);
+	L(2) = calcl(X, trans, newmeans, newsigmas);
+	deltaL = L(2) - L(1);
+
+	while abs(deltaL) > 0.001
+		
+		printf("Iter: %d\n", it);
+
+		% plotting
+		HMM.means = newmeans;
+		HMM.vars = newsigmas;
+		HMM.trans = exp(trans);
+		hfg = figure();
+		plotseq2(X, ST, HMM);
+		title(sprintf('Observations, Sequence - Iteration: %d - EM model', it));
+		saveas(hfg, sprintf("iter-%d.png", it));
+
+		[alphamat, alphalogprob] = alpha(X, trans, newmeans, newsigmas);
+		[betamat, betalogprob] = beta(X, trans, newmeans, newsigmas);
+
+		%%%%%%%%%%%%%%%%
+		%%%% E step %%%%
+		%%%%%%%%%%%%%%%%
+		
+		gammas = calcgamma(alphamat, betamat);
+		ximat = calcxi(X, alphamat, betamat, alphalogprob, trans, newmeans, newsigmas);
+
+		%%%%%%%%%%%%%%%%
+		%%%% M step %%%%
+		%%%%%%%%%%%%%%%%
+
+		trans = calctrans(ximat, gammas);
+		newmeans = calcmu(X, gammas);
+		newsigmas = calcsigma(X, gammas, newmeans);
+
+		%% update L and iterations
+		L(1) = L(2);
+		L(2) = calcl(X, trans, newmeans, newsigmas);
+		deltaL = L(2) - L(1);
+		it++;
+	end
+
+	HMM.means = newmeans;
+	HMM.vars = newsigmas;
+	HMM.trans = exp(trans);
+end
+```
+
+- **Alpha**
+
+```octave
+function[mat, logprob] = alpha(Y, a, means, sigmas)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 											%%
+%% INPUT 									%%
+%%  - Y: matrix (dim: 2 x TIME) 			%%
+%%  - a: matrix (dim: 5x5) 					%%
+%%  - means: cell (dim: 5 x 2-vector) 		%%
+%%  - sigmas: cell (dim: 5 x 2x2-matrix) 	%%
+%% OUPUT 									%%
+%%  - mat: matrix (dim: STATES x TIME) 		%%
+%%  - logprob: double 						%%
+%% 											%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	T = length(Y);
+	N = 3;
+
+	alpham = zeros(N, T);
+
+	% initialize alpha matrix
+	for j = 1:N
+		alpham(j, 1) = a(1, j+1) + logb(Y(1,:)', means{j+1}, sigmas{j+1});
+	end
+
+	% continue with following values
+	for t = 2:T
+	
+		for j = 1:N
+		
+			aux = zeros(1,N);
+			
+			for i = 1:N
+				aux(i) = a(i+1,j+1) + alpham(i, t-1);
+			end
+			
+			logaux = logsum(aux);
+			alpham(j, t) = logb(Y(t,:)', means{j+1}, sigmas{j+1}) + logaux;
+		end
+	end
+
+	% finish the last values
+	logprob = logsum(alpham(:,T) + a(2:4,5));
+	mat = alpham;
+end
+```
+
+- **Beta**
+
+```octave
+function[mat, logprob] = beta(Y, a, means, sigmas)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 											%%
+%% INPUT 									%%
+%%  - Y: matrix (dim: 2 x TIME) 			%%
+%%  - a: matrix (dim: 5x5) 					%%
+%%  - means: cell (dim: 5 x 2-vector) 		%%
+%%  - sigmas: cell (dim: 5 x 2x2-matrix) 	%%
+%% OUPUT 									%%
+%%  - mat: matrix (dim: STATES x TIME) 		%%
+%%  - logprob: double 						%%
+%% 											%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	T = length(Y);
+	N = 3;
+
+	betam = zeros(N, T);
+
+	% initialize beta matrix
+	betam(:, T) = a(2:4,5);
+
+	% continue with the following values
+	for t = T-1:-1:1
+		
+		for i = 1:N
+		
+			aux = zeros(1,N);
+		
+			for j = 1:N
+				aux(j) = logb(Y(t+1,:)', means{j+1}, sigmas{j+1}) + ...
+							a(i+1,j+1) + betam(j, t+1);
+			end
+		
+			betam(i,t) = logsum(aux);
+		end
+	end
+
+	% calc the log-prob
+	aux = zeros(1,N);
+
+	for i = 1:N
+		aux(i) = betam(i,1) + a(1,i+1) + logb(Y(1,:)', means{i+1}, sigmas{i+1});
+	end
+
+	logprob = logsum(aux);
+	mat = betam;
+end
+```
+
+- **Gamma**
+
+```octave
+function [mat] = calcgamma(alphamat, betamat)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 						 						%%
+%% INPUT 					 					%%
+%%  - alphamat: matrix (dim: STATES x TIME) 	%%
+%%  - betamat: matrix (dim: STATES x TIME) 	 	%%
+%% OUPUT 					 					%%
+%%  - mat: matrix (dim: STATES x TIME) 		 	%%
+%% 						 						%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	mat = alphamat .+ betamat;
+
+	for i = 1:length(alphamat)
+		aux = logsum(mat(:,i));
+		mat(:,i) = mat(:,i) - aux;
+	end
+end
+```
+
+- **Xi**
+
+```octave
+function[res] = calcxi(X, alphamat, betamat, logprob, a, means, sigmas)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 						 						%%
+%% INPUT 					 					%%
+%%  - X: matrix (dim: 2 x TIME) 		 		%%
+%%  - alphamat: matrix (dim: STATES x TIME) 	%%
+%%  - betamat: matrix (dim: STATES x TIME) 	 	%%
+%%  - logprob: double 				 			%%
+%%  - a: matrix (dim: 5x5) 			 			%%
+%%  - means: cell (dim: 5 x 2-vector) 		 	%%
+%%  - sigmas: cell (dim: 5 x 2x2-matrix) 	 	%%
+%% OUPUT 					 					%%
+%%  - res: 3D-matrix (dim: 5 x 5 x TIME) 	 	%%
+%% 						 						%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	ximat = zeros(5, 5, length(X));
+	aux = zeros(1, 3);
+
+	for t = 2:length(X)
+		
+		logden = logsum(alphamat(:, t) + betamat(:,t));
+
+		for j = 2:4
+			for k = 2:4
+				b = logb(X(t,:)', means{k}, sigmas{k});
+				ximat(j,k,t) = alphamat(j-1, t-1) + a(j,k) + b + betamat(k-1, t) - logden;
+			end
+		end
+	end
+
+	res = ximat;
+end
+```
+
+- **Mu**
+
+```octave
+function [res] = calcmu(X, gammas)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 											%%
+%% INPUT 									%%
+%%  - X: matrix (dim: 2 x TIME) 			%%
+%%  - gammas: matrix (dim: STATES x TIME) 	%%
+%% OUPUT 									%%
+%%  - res: cell (dim: 5 x 2-vector) 		%%
+%% 											%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	means = {};
+	den = calcden(gammas);
+	N = size(gammas)(1);
+
+	means{1} = [];
+
+	for k = 1:N
+	
+		aux = zeros(2, 1);
+	
+		for t = 1:length(X)
+			aux += exp(gammas(k, t)) .* X(t,:)';
+		end
+	
+		means{k+1} = aux ./ exp(den(k));
+	end
+
+	means{5} = [];
+
+	res = means;
+end
+```
+
+- **Sigmas**
+
+```octave
+function[res] = calcsigma(X, gammas, means)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 												%%
+%% INPUT 										%%
+%%  - X: matrix (dim: 2 x TIME) 				%%
+%%  - gammas: matrix (dim: STATES x TIME) 		%%
+%%  - means: cell (dim: 5 x 2-vector) 			%%
+%% OUPUT 										%%
+%%  - res: cell (dim: 5 x 2x2-matrix) 			%%
+%% 												%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	sigmas = {};
+	den = calcden(gammas);
+	N = size(gammas)(1);
+
+	sigmas{1} = [];
+
+	for k = 1:N
+		
+		aux = zeros(2, 2);
+		
+		for t = 1:length(X)
+			xminm = X(t,:)' - means{k+1};
+			aux += exp(gammas(k, t)) .* (xminm * xminm');
+		end
+		
+		sigmas{k+1} = aux ./ exp(den(k));
+	end
+
+	sigmas{5} = [];
+
+	res = sigmas;
+end
+```
+
+- **Matriz de transición**
+
+```octave
+function[res] = calctrans(xi, gammas)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 												%%
+%% INPUT 										%%
+%%  - xi: 3D-matrix (dim: 5 x 5 x TIME) 		%%
+%%  - gammas: matrix (dim: STATES x TIME) 		%%
+%% OUPUT 										%%
+%%  - res: matrix (dim: 5 x 5) 					%%
+%% 												%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	den = calcden(gammas);
+
+	trans(1:5, 1:5) = -250;
+
+	% starts the matrix with a '1' (log(1) = 0)
+	% in the a(1,2) position to make
+	% the sequence starts, and a '1' (log(1) = 0)
+	% in the last position to finish
+	% the sequence
+	trans(1,2) = 0;
+	trans(5,5) = 0;
+
+	% complete the 'trans' matrix center
+	% by summing up all the centers
+	% in the 'xi' matrix
+	for j = 2:4
+		for k = 2:4
+			trans(j,k) = logsum(xi(j,k,2:end));
+		end
+	end
+
+	% complete the 'trans' matrix
+	% by dividing the rows by
+	% the denominator (substract, in log calc)
+	for j = 2:4
+		trans(j,2:4) = trans(j,2:4) - den(j-1);
+	end
+
+	% and calc the last column (1 - sum(trans(j,2:4))),
+	% by applying the exp() function to the inner matrix
+	% exp(trans(2:4,2:4))
+	exptrans = exp(trans(2:4,2:4));
+	for j = 2:4
+		r = abs(1.0 - sum(exptrans(j-1,:)));
+		if r == 0.0
+			trans(j,5) = -250;
+		else
+			trans(j,5) = log(r);
+		end
+	end
+
+	res = trans;
+end
+```
+
+- _Denominador_
+
+```octave
+function [res] = calcden(gammas)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 											%%
+%% INPUT 									%%
+%%  - gammas: matrix (dim: STATES x TIME) 	%%
+%% OUPUT 									%%
+%%  - res: vector (dim: STATES) 			%%
+%% 											%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	N = size(gammas)(1);
+
+	res = zeros(1, N);
+
+	for k = 1:N
+		res(k) = logsum(gammas(k,:));
+	end
+end
+```
+
+- _Likelihood_
+
+```octave
+function [L] = calcl(X, trans, means, sigmas)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 											%%
+%% INPUT 									%%
+%%  - X: matrix (dim: 2 x TIME) 			%%
+%%  - trans: matrix (dim: 5x5) 				%%
+%%  - means: cell (dim: 5 x 2-vector) 		%%
+%%  - sigmas: cell (dim: 5 x 2x2-matrix) 	%%
+%% OUPUT 									%%
+%%  - L: double 							%%
+%% 											%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	[_, L] = alpha(X, trans, means, sigmas);
+end
+```
+
+
+
 ## HMM
 
 ### Script
@@ -133,30 +566,41 @@ printf("tot: %f\n", logfwd(X, HMM));
 % decode the sequence into models
 printf("Sequence of models: ");
 
-_STuni = unique(_ST);
 idx = 2;
 
-while idx <= length(_STuni)-1
+while idx <= length(_ST)-1
 
-	e = _STuni(idx);
+	e = _ST(idx);
 
-	if e == 2
-		printf("HMM-4 ");
+	while e == 2 || e == 3 || e == 4
+		idx++;
+		e = _ST(idx);
 	end
 
-	if e == 5
-		printf("HMM-6");
+	printf("HMM-4 ");
+
+	while e == 5 || e == 6 || e == 7
+		idx++;
+		e = _ST(idx);
 	end
 
-	idx += 3;
+	printf("HMM-6");
 end
 
 printf("\n");
 ```
 
+### Output
+
+```
+real: -843.035089
+opt: -843.035089
+tot: -843.034033
+Sequence of models: HMM-4 HMM-6 HMM-6
+```
+
 ### Comparación
 
 ![Comparación: Original-Viterbi](/home/patricio/Documents/FIUBA/Procesamiento del Habla/proc-habla-ejercicios/markov/octave/plots/seq-orig-viterbi.png)
-
 
 

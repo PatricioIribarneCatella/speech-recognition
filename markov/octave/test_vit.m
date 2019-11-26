@@ -62,22 +62,25 @@ printf("tot: %f\n", logfwd(X, HMM));
 % decode the sequence into models
 printf("Sequence of models: ");
 
-_STuni = unique(_ST);
 idx = 2;
 
-while idx <= length(_STuni)-1
+while idx <= length(_ST)-1
 
-	e = _STuni(idx);
+	e = _ST(idx);
 
-	if e == 2
-		printf("HMM-4 ");
+	while e == 2 || e == 3 || e == 4
+		idx++;
+		e = _ST(idx);
 	end
 
-	if e == 5
-		printf("HMM-6");
+	printf("HMM-4 ");
+
+	while e == 5 || e == 6 || e == 7
+		idx++;
+		e = _ST(idx);
 	end
 
-	idx += 3;
+	printf("HMM-6");
 end
 
 printf("\n");
