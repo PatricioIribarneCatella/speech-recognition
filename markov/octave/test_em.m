@@ -6,7 +6,7 @@ inic_hmm;
 
 done = false;
 
-while !done
+while ~done
 	[X, ST] = genhmm(hmm4);
 	done = length(ST(ST == 2)) >= 15 && ...
 		length(ST(ST == 3)) >= 15 && ...
@@ -24,12 +24,17 @@ sigmas = {[], sig, sig, sig, []};
 % generate first transition matrix
 a = [0 1 0 0 0; 0 0.5 0.5 0 0; 0 0 0.5 0.5 0; 0 0 0 0.5 0.5; 0 0 0 0 1];
 
-[hmmEM, gammas, it] = em(X, means, sigmas, a);
+[hmmEM, gammas, it] = em(X, means, sigmas, a, ST);
 
 % plot the sequences and its ellipsis for
 % the original model and the EM model
-figure('Name','Original model','NumberTitle','off');
+hfg = figure('Name','Original model','NumberTitle','off');
 plotseq2(X, ST, hmm4);
+title('Observations, Sequence - Original model');
+saveas(hfg, "original-model.png");
 
-figure('Name','EM model','NumberTitle','off');
+hfg = figure('Name','EM model','NumberTitle','off');
 plotseq2(X, ST, hmmEM);
+title('Observations, Sequence - EM model');
+saveas(hfg, "EM-model.png");
+

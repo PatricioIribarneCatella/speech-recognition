@@ -1,4 +1,4 @@
-function[HMM, gammas, it] = em(X, means, sigmas, a)
+function[HMM, gammas, it] = em(X, means, sigmas, a, ST)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 						%%
@@ -33,6 +33,15 @@ function[HMM, gammas, it] = em(X, means, sigmas, a)
 	while abs(deltaL) > 0.001
 		
 		printf("Iter: %d\n", it);
+
+		% plotting
+		HMM.means = newmeans;
+		HMM.vars = newsigmas;
+		HMM.trans = exp(trans);
+		hfg = figure();
+		plotseq2(X, ST, HMM);
+		title(sprintf('Observations, Sequence - Iteration: %d - EM model', it));
+		saveas(hfg, sprintf("iter-%d.png", it));
 
 		[alphamat, alphalogprob] = alpha(X, trans, newmeans, newsigmas);
 		[betamat, betalogprob] = beta(X, trans, newmeans, newsigmas);
