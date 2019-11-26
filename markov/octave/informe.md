@@ -596,7 +596,7 @@ printf("\n");
 real: -843.035089
 opt: -843.035089
 tot: -843.034033
-Sequence of models: HMM-4 HMM-6 HMM-6
+Sequence of models: HMM-6 HMM-4 HMM-4
 ```
 
 ### Comparación
