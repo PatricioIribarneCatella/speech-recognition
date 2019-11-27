@@ -1,0 +1,154 @@
+=========================================================
+Proyecto : Sistema de reconocimiento de habla en español 
+=========================================================
+
+Objetivos del proyecto
+* implementar un sistema de reconocimiento automático de habla en idioma español de aproximadamente 3000 palabras.
+* Implementar un sistema de reconocimiento de gramática finita de alrededor de 30 palabras para ser usado en tiempo real.
+Se implementará un baseline con la base de datos latino40 con modelos de monofonos. Luego se implementará una gramática finita para usarla en tiempo real.
+
+
+Muy importante
+--------------
+Todos los resultados, los pasos intermedios y cualquier explicación que deba hacerse deberá registrarse en el archivo NOTAS. La idea del archivo NOTAS es que el mismo contenga la información que permita a cualquier persona con sus conocimientos, repetir todo el proceso de implementación y llegar a los mismos resultados.
+
+
+Nota previa
+-----------
+Datos de los que se dispone:
+ * Base de datos latino40: Emisiones acústicas en formato NIST (/dbase/latino40/wav) separadas en los directorios train y test
+ * Directorio /home/cestien/proyecto Dicho directorio contiene scripts, transcripciones y demás datos necesarios para la implementación del sistema.
+ * Este proyecto está basado en el tutorial que encuentra en el capítulo 3 del manual de HTK. Utilize el mismo como referencia. 
+
+
+Preparación de la estructura de directorios
+-------------------------------------------
+Armar la siguiente estructura de directorios. NO copie los wav (usar ln):
+  * proyecto
+     * datos
+        * wav 
+           * train
+           * test
+        * mfc
+           * train
+           * test
+     * etc
+     * modelos
+     * rec
+     * log
+     * config
+     * scripts
+     * lm
+     NOTAS	 (Archivo de texto con todas las explicaciones) 
+
+Una vez armada la estructura de directorios copie los siguientes archivos del directorio /home/cestien/proyecto:
+* config.hcopy en ~/proyecto/config
+* go.mfclist, prompts2mlf, go.gen-hmmdefs  y go.gen-macros  en ~/proyecto/scripts
+* lexicon, lexicon.gf, wlistgf, promptsl40.train, promptsl40.test, mkphones-sp.led  en  ~/proyecto/etc
+* proto en ~/proyecto/modelos
+* Para la tarea de gramática finita copiar wlist.gf y lexicon.gf en ~/proyecto/etc
+IMPORTANTE: Todas las instrucciones asumen que se encuentra en el directorio ~/proyecto. Verifique esto porque es una fuente de error muy frecuente.
+
+Parametrización de los datos
+----------------------------
+El objetivo es parametrizar las señales acústicas (archivos .wav) obteniendo los coeficientes mfcc (arhivos.mfc). Para ello el  HTK provee la herramienta HCopy:
+
+cd datos
+../scripts/go.mfclist genmfc.train genmfc.test
+HCopy -A -V -T 1 -C  ../config/config.hcopy -S genmfc.train > ../log/hcopy.train.log
+HCopy -A -V -T 1 -C  ../config/config.hcopy -S genmfc.test > ../log/hcopy.test.log
+
+* Observe el contenido de go.mfclist   intente enteder que hace.
+* Con el manual de HTK analize los parámetros que se usaron en HCopy (archivo config.hcopy).
+* Observe el contenido de hcopy.train.log. 
+* Visualize algunos archivos .mfc usando HList -h x.mfc
+
+
+Creación del diccionario
+------------------------
+Vaya al directorio etc
+HTK crea diccionarios con la herramienta HDMan. Para ello necesita:
+ * Los diccionarios fuentes (lexicon), uno o mas. En nuestro caso usaremos los archivos lexicon y lexicon.gf que se hallan  en el directorio etc. 
+ * Un archivo de texto con instrucciones de edición. 
+ * La lista de palabras de las cuales se quiere obtener la pronunciación. En nuestro caso usaremos los archivos promptsl40.train y promptsl40.test que se halla en el directorio etc.
+
+La siguiente instrucción crea el archivo global.ded que contine las instrucciones de edición:
+echo "AS  sp" > global.ded
+Usando el manual de HTK corrobore que instrucción se le está dando  a HDMan en este caso.
+
+La siguiente instrucción crea la lista de palabras:
+cat promptsl40.train promptsl40.test |\
+awk '{for(i=2;i<=NF;i++){print $i}}'|sort|uniq > wlistl40
+Analice cuidadosamente  como se genera la lista. Consulte los comandos sort, uniq, sed y awk.
+
+ 
+Como resultado de la herramienta HDMan se obtiene:
+ * Una lista de los fonos encontrados (opción -n)
+ * El diccionario de pronunciaciones de la lista de palabras de entrada
+
+HDMan -m -w wlistl40 -g global.ded -n monophones+sil -l ../log/hdman.log dictl40   lexicon
+Analice cuidadosamente los resultados obtenidos (archivos monophones+sil y dictl40)
+
+
+
+
+Creación de MLF de transcripciones de palabra y fonéticas
+---------------------------------------------------------
+La información de transcripciones se proveerá a partir de master label files (MLF). Estos archivos, tienen un formato especial en el cual se provee la ubicación del archivo que contiene la emisión acústica y el correspondiente archivo de transcripción. Si la transcripción es por palabras en cada linea habrá una palabra, si es por fonema en cada linea habrá un fonema. Opcionalmente se puede agregar una short-pause (sp) entre palabras y un silencio (sil) al comienzo y al final de cada transcripción. 
+
+Para implementar el MLF de palabras puede utilizar el script prompts2mlf provisto en /home/cestien/proyecto. La implementación del MLF fonético se realiza con HLEd. Esta aplicación posee varias posibilidades para editar archivos de etiquetas (transcripciones). Requiere como entrada el MLF a nivel palabras, un archivo con los comandos que implementan las acciones deseadas, y el diccionario. El archivo con los comandos se llama mkphones-sp.led y también está provisto en /home/cestien/proyecto. Como resultado produce el archivo MLF a nivel fonético. Vea el ejemplo en el tutorial (3.1.4). Analice el arhivo mkphones-sp.led.
+
+
+Creación de modelos de monofonos con una sola gausiana
+------------------------------------------------------
+Vaya al directorio modelos
+Los modelos fonéticos se crearan basados en el prototipo proto que sen encuentra en /home/cestien/proyecto. El mismo crea un modelo de cinco estados, tres emisores y dos dos no emisores con coeficientes de velocidad y acelarción y C0. (Nótese que los coeficientes originales se crearon sin D y A, por lo que el HTK los creará en el momento, siempre que se lo especifiquemos a los programas que estiman parámetros). Los modelos de silencio sil y sp se crearán usando la topología descripta en 3.2.2.
+
+Los modelos iniciales se crearán usando HCompV (ver 3.2.1)  Tambíen se creará con esta herramienta el macro vFloors que establece un piso para el valor de la varianza en los sucesivos modelos (ver detalles en 3.2.2).  Todos los modelos se encuentran en un archivo llamado hmmdefs. La idea es similar a las de los MLF pero para modelos, por ello este tipo de archivos se llaman master models file (MMF). Para crear el archivo hmmdefs inicial utilize el script go.gen-hmmdefs. El requiere como entrada una lista de fonos y el prototipo (proto). La lista de fonos ya la obtuvo cuando creó el diccionario usando la opción -n en HDMan. Utilice dicha lista pero elimine sp, ya que que como dijimos, sp no se modeliza con la topología de proto. Además agregue sil ya que no está en la lista. 
+
+Una vez creados los modelos iniciales, estos se reestimarán usando la herramienta HERest. La misma requiere como entrada la lista de mfc a usar como entrenamiento, las transcripciones a nivel fonema obtenidas con HLed, y el modelo inicial. Los modelos reestimados son almacenados en un nuevo MMF. HERest como se explicó estima los modelos fonéticos usando solo la información de los fonemas que se encuentran en cada transcripción, y no su ubicación en la frase. La opción -t permite "podar" aquellos términos de las sumas en el algoritmo de forward-backward cuyo likelihood está debajo de un umbral. Dicho umbral se va incrementado si la reestimación da un error hasta un límite superior especificado en la opción. 
+
+Cada vez que se realiza una modificación en los modelos se debe ejecutar nuevamente HERest para crear el modelo modificado. En general es conveniente realizar al menos dos pasadas.
+
+Una vez que se tiene el modelo reestimado, se deberá agregar el modelo sp y completar la topología del modelo sil. El modelo sp solo tiene un estado emisor. Se crea un prototipo con esas características en el hmmdefs. Usamos el estado central de sil y lo copiamos en el estado central de sp. Faltaría agregar los arcos que completan la topología. Esto se hace con la herramienta HHEd. HHEd es un editor de modelos que se utiliza para definir modelos complicados a partir de modelos simples. En nuestro caso solo lo usamos para crear los arcos y para decirle a sp que comparte su estado central con el estado central de sil. Las instrucciones se implementan al igual que en HLEd mediante un archivo de comandos (Ver 3.2.2).
+
+Creación de los modelos de lenguaje
+-----------------------------------
+
+Como se explicó se implementará un modelo de bigramas usando el toolkit SRILM. La herramienta de dicho kit que permite implementar el modelo se llama ngram-count y se encuentra en el directorio: /usr/local/speechapp/srilm/bin/i686-m64/ 
+
+ngram-count  -order 2 -text train.txt -lm lml40  -ukndiscount2  -vocab vocab
+
+El vocabulario consta de todas las palabras de la base de datos de test. Por lo tanto usando promptsl40.test obtenga el vocabulario del mismo modo que obtuvo wlistl40. El archivo train.txt contiene las transcripciones sin los identificadores. El parámetro -order 2 indica que se implementa un modelo de bigramas y el parametro unkdiscount2 indica que se usa el método de suavizado de Kneser-Ney. Para mas detalles invoque ngram-count con la opción --help. 
+
+Para completar el vocabulario agregue  la lista las lineas <s> y </s>.
+
+Para completar el diccionario agregue al mismo las lineas <s> sil y </s> sil
+
+
+
+Reconocimiento con el modelo de unigramas y una sola gausiana
+-------------------------------------------------------------
+
+En primer lugar deberá construirse el lattice (wdnet). Se implementaran dos tipos de redes, la primera utilizará todas las palabras del vocabulario con transiciones basadas en el modelo de lenguaje. La segunda se implementará con una gramática simple (ver mas adelante). 
+
+El reconocimiento se implementa usando HVite. Las entradas serán, la lista de archivos mfc, el diccionario, la lista de monofonos (aqui debería incluirse el monofono sp), y el modelo. El resultado es un archivo que contiene las transcripciones por palabras reconocidas y las muestras en las que las mismas se encuentran. 
+
+La evaluación se realiza con HResults. Para ello es necesario la transcripción de los archivos de test a nivel palabra en un MLF. 
+
+Refinamiento del modelo agregando mezclas de gausianas
+------------------------------------------------------
+
+Se procederá  a refinar el modelo partiendo del modelo de una gausiana. Se creará un modelo de dos mezclas usando HHEd y se estimará dicho modelo usando HERest. Luego se evaluará el desempeño de dicho modelo y se continuará incrementando el número de gausianas en potencia de dos, hasta que el incremento del desempeño sea despreciable. 
+
+Implementación de la gramática finita.
+-------------------------------------
+
+La tarea consiste en un sistema de reconocimiento de llamadas telefónicas similar al descripto en el tutorial de HTK. En nuestro caso definiremos los nodos env-com y env-fin que representan el comienzo y fin de frase. Seguidamente a env-com pueden ocurrir las siguientes frases:
+1) "llame"/"llamar" "al" seguido de los digitos 0 a 9 dichos cualquier cantidad de veces.
+2) "comuniqueme con" seguido de los nombres juan, juana, patricia, pedro, andrea y andres. Opcionalmente los nombres juan pedro y andrea pueden venir acompañados de sus respectivos apellidos: fernandez, rodriguez y perez. 
+
+Los archivos wlist.gf y lexicon.gf en el directorio proyecto contienen la lista de palabras de la gramática y el diccionario de pronunciaciones de la misma respectivamente. 
+
+A fin de evaluar los modelos fonéticos obtenidos anteriormente con la tarea de gramática finita, genere 200 frases aleatorias usando HSGen. A partir de dichas frases debería pronunciarlas y grabarlas en 200 archivos en formato wav de microsoft. Luego deberá proceder a la evaluación del sistema de la misma manera que en el la primera parte del proyecto, excepto que la red (wnet) en lugar de ser creada a partir del modelo de lenguaje, será creada usando HParse. Realice la evaluación usando el mejor modelo obtenido y compare resultados.
+ 
