@@ -482,21 +482,21 @@ saveas(hfg, "EM-model.png");
 
 ### Plots
 
-![Iteración 0](/home/patricio/Documents/FIUBA/Procesamiento del Habla/proc-habla-ejercicios/markov/octave/plots/iter-0.png)
+![Iteración 0](plots/iter-0.png)
 
-![Iteración 1](/home/patricio/Documents/FIUBA/Procesamiento del Habla/proc-habla-ejercicios/markov/octave/plots/iter-1.png)
+![Iteración 1](plots/iter-1.png)
 
-![Iteración 2](/home/patricio/Documents/FIUBA/Procesamiento del Habla/proc-habla-ejercicios/markov/octave/plots/iter-2.png)
+![Iteración 2](plots/iter-2.png)
 
-![Iteración 3](/home/patricio/Documents/FIUBA/Procesamiento del Habla/proc-habla-ejercicios/markov/octave/plots/iter-3.png)
+![Iteración 3](plots/iter-3.png)
 
-![Iteración 4](/home/patricio/Documents/FIUBA/Procesamiento del Habla/proc-habla-ejercicios/markov/octave/plots/iter-4.png)
+![Iteración 4](plots/iter-4.png)
 
 ### Comparación
 
-![Modelo **original**](/home/patricio/Documents/FIUBA/Procesamiento del Habla/proc-habla-ejercicios/markov/octave/plots/original-model.png)
+![Modelo **original**](plots/original-model.png)
 
-![Modelo **EM**](/home/patricio/Documents/FIUBA/Procesamiento del Habla/proc-habla-ejercicios/markov/octave/plots/EM-model.png)
+![Modelo **EM**](plots/EM-model.png)
 
 ## Viterbi
 
@@ -635,6 +635,6 @@ Sequence of models: HMM-6 HMM-4 HMM-4 HMM-6 HMM-4 HMM-6 HMM-6
 
 ### Comparación
 
-![Comparación: Original-Viterbi](/home/patricio/Documents/FIUBA/Procesamiento del Habla/proc-habla-ejercicios/markov/octave/plots/seq-orig-viterbi.png)
+![Comparación: Original-Viterbi](plots/seq-orig-viterbi.png)
 
 
