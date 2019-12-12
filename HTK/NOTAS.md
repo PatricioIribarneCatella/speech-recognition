@@ -3,16 +3,38 @@
 Procesamiento del Habla (66.43) - FIUBA
 
 
-## Generación del los coeficientes MFCC 
+## Generación del los coeficientes _MFCC_
 
-HCopy -A -V -T 1 -C ../config/config.hcopy -S genmfc.train > ../log/hcopy.train.log
-HCopy -A -V -T 1 -C ../config/config.hcopy -S genmfc.test > ../log/hcopy.test.log
+```bash
+HCopy -A -V -T 1 -C config.hcopy -S genmfc.train > hcopy.train.log
+HCopy -A -V -T 1 -C config.hcopy -S genmfc.test > hcopy.test.log
+```
 
-# Create wlist considering all the prompts: train and test
-export LC_CTYPE=ISO_8859_1
-echo "AS  sp" > global.ded
-cd etc
+Utilizando el comando `HCopy` se realiza una traducción de los archivos _WAV_ a los coeficientes _MFCC: Mell Frequency Cepstrum Coefficients_. En los archivos _genmfc.train_ y _genmfc.test_ se especifica cómo debe realizarse ese mapeo, es decir, se indica cuál archivo _WAV_ corresponde con cuál archivo _MFCC_. Por otro lado, en el archivo _config.hcopy_ se declaran los atributos que deben tener los coeficientes _MFCC_ a generar. Por ejemplo, cuál va a ser el tamaño de ventana a utilizar, cuál va a ser la tasa de muestreo de dichas ventanas, el tipo de ventana a aplicar, y cuántos coeficientes dejar luego de la etapa de _liftering_, entre otros.
+
+```
+ # Coding parameters
+ TARGETKIND = MFCC_0
+ TARGETRATE = 100000.0
+ SAVECOMPRESSED = T
+ SAVEWITHCRC = T
+ WINDOWSIZE = 250000.0
+ USEHAMMING = T
+ PREEMCOEF = 0.97
+ NUMCHANS = 26
+ CEPLIFTER = 22
+ NUMCEPS = 12
+ ENORMALISE = F
+ SOURCEFORMAT = NIST
+```
+
+## Generación de la _word-list_ mediante el uso de _prompts_
+
+```bash
 cat promptsl40.train promptsl40.test | awk '{for(i=2;i<=NF;i++){print $i}}' | sort | uniq > wlistl40
+```
+
+Los archivos _promptsl40.train_ y _promptsl40.test_ contienen las transcripciones de todas las frases dichas en las grabaciones de la base de datos _latino40_. Para poder utilizar el _HTK_ se debe confeccionar un archivo que contenga todas las palabras dichas en cada una de las frases, para luego poder convertirlas en los sonidos fonéticos de cada una. 
 
 # Dictionary and phonos founded
 HDMan -m -w wlistl40 -g global.ded -n monophones+sil -l ../log/hdman.log dictl40 lexicon
