@@ -70,6 +70,8 @@ Como se puede ver, se utilizan como _inputs_ el diccionario (_dictl40_), el _MLF
 
 Para poder ejecutar el algoritmo de _Baum-Welch_, primero se necesita realizar una inicialización adecuada de los parámetros como ser, la media, la varianza y la matriz de transición de todos los estados de cada una de las palabras, para cada una de las frases. Para ello, se utiliza el comando `HCompV` que genera valores iniciales en un archivo de _output_ llamado _proto_.
 
+### Inicialización
+
 ```bash
 ls ../datos/mfc/train/*/*.mfc > train.scp
 HCompV -C ../config/config -f 0.01 -m -S train.scp -M hmm0 hmm0/proto
@@ -84,7 +86,8 @@ Por último, es necesario crear los archivos que _HTK_ emplea para realizar el a
 
 
 
-# Train models with EM
+### _Baum-Welch_
+
 ```bash
 HERest -C ../config/config -I ../etc/phones.train -t 250.0 150.0 1000.0 -S train.scp -H hmm0/macros -H hmm0/hmmdefs \
 		-M hmm1 ../etc/monophones+sil
@@ -92,6 +95,8 @@ HERest -C ../config/config -I ../etc/phones.train -t 250.0 150.0 1000.0 -S train
 HERest -C ../config/config -I ../etc/phones.train -t 250.0 150.0 1000.0 -S train.scp -H hmm1/macros -H hmm1/hmmdefs \
 		-M hmm2 ../etc/monophones+sil
 ```
+
+### Agregado del estado _sp: short pause_
 
 # Copy model from hmm2 to hmm3
 # Add sp state referecing intermidiate silence state
@@ -110,6 +115,14 @@ HLEd -l '*' -d dictl40 -i phones1.train mkphones.led mlfwords.train
 HERest -C ../config/config -I ../etc/phones1.train -t 250.0 150.0 1000.0 -S train.scp -H hmm4/macros -H hmm4/hmmdefs \
 		-M hmm5 ../etc/monophones+sil
 ```
+
+
+
+
+
+
+
+## Reconocimiento
 
 # Create vocabulary
 ```bash
