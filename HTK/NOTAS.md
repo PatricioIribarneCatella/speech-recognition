@@ -54,9 +54,10 @@ prompts2mlf mlfwords.test promptsl40.test
 prompts2mlf mlfwords.train promptsl40.train
 ```
 
-# Convert MLF-words into MLF-phones
+Por último es necesario también, convertir el el _MLF_ de palabras, mediante el uso del diccionario creado en el paso anterior, a un _MLF_ de fonemas. Ésto se hace utilizando el comando `HLed` que es el _editor_ de _MLF_, de la siguiente forma:
+
 ```bash
-HLEd -l '*' -d dictl40 -i phones.train mkphones-sp.led mlfwords.train
+HLEd -l '*' -d dictl40 -i mlfphones.train mkphones-sp.led mlfwords.train
 ```
 
 # Generate intial parameters: {means, vars, transmat}
