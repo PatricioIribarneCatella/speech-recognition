@@ -6,8 +6,8 @@ Procesamiento del Habla (66.43) - FIUBA
 ## Generación del los coeficientes _MFCC_
 
 ```bash
-HCopy -A -V -T 1 -C config.hcopy -S genmfc.train 
-HCopy -A -V -T 1 -C config.hcopy -S genmfc.test 
+$ HCopy -A -V -T 1 -C config.hcopy -S genmfc.train 
+$ HCopy -A -V -T 1 -C config.hcopy -S genmfc.test 
 ```
 
 Utilizando el comando `HCopy` se realiza una traducción de los archivos _WAV_ a los coeficientes _MFCC: Mell Frequency Cepstrum Coefficients_. En los archivos _genmfc.train_ y _genmfc.test_ se especifica cómo debe realizarse ese mapeo, es decir, se indica cuál archivo _WAV_ corresponde con cuál archivo _MFCC_. Por otro lado, en el archivo _config.hcopy_ se declaran los atributos que deben tener los coeficientes _MFCC_ a generar. Por ejemplo, cuál va a ser el tamaño de ventana a utilizar, cuál va a ser la tasa de muestreo de dichas ventanas, el tipo de ventana a aplicar, y cuántos coeficientes dejar luego de la etapa de _liftering_, entre otros.
@@ -32,7 +32,7 @@ Utilizando el comando `HCopy` se realiza una traducción de los archivos _WAV_ a
 ## Generación de la _word-list_ mediante el uso de _prompts_
 
 ```bash
-cat promptsl40.train promptsl40.test |\
+$ cat promptsl40.train promptsl40.test |\
 	 awk '{for(i=2;i<=NF;i++){print $i}}' | sort | uniq > wlistl40
 ```
 
@@ -44,7 +44,7 @@ Los archivos _promptsl40.train_ y _promptsl40.test_ contienen las transcripcione
 Si bien ya se dispone de todas las frases transcriptas y de todas las palabras que en ellas aparecen, todavía no se tiene la pronunciación fonética de las mismas. Justamente ésto es lo que se necesita a la hora de poder entrenar, y reconecer posteriormente, frases nuevas. Para ello se utiliza el comando `HDMan` el cual toma como _inputs_ a la lista de palabras generadas anteriormente, una lista de todos los modelos fonéticos de nuestro idioma, y un diccionario completo de todas las palabras posibles junto con su descomposición en fonemas. Finalmente devuelve como _output_, un diccionario de las palabras utilizadas con su descomposición fonética.
 
 ```bash
-HDMan -m -w wlistl40 -g global.ded -n monophones+sil dictl40 lexicon
+$ HDMan -m -w wlistl40 -g global.ded -n monophones+sil dictl40 lexicon
 ```
 
 
@@ -53,14 +53,14 @@ HDMan -m -w wlistl40 -g global.ded -n monophones+sil dictl40 lexicon
 En este momento se dispone de los siguientes datos: por un lado se tienen las transcripciones de las frases dichas en las grabaciones, y por otro se posee una descomposición fonética de cada una de las palabras que figuran en dichas frases. Lo que se necesita ahora, es transformar estos datos para que _HTK_ pueda interpretarlos adecuadamente. _HTK_ funciona con lo que se denominan _MLF (Master Label File)_. Éstos no son nada más ni nada menos que los mismos datos que están en los archivos _promptsl40_ pero con un formato particular para _HTK_. Se utiliza un _script_ proporcionado por la cátedra para convertirlos, de la siguiente manera:
 
 ```bash
-prompts2mlf mlfwords.test promptsl40.test
-prompts2mlf mlfwords.train promptsl40.train
+$ prompts2mlf mlfwords.test promptsl40.test
+$ prompts2mlf mlfwords.train promptsl40.train
 ```
 
 Por último es necesario también, convertir el _MLF_ de palabras, mediante el uso del diccionario creado en el paso anterior, a un _MLF_ de fonemas. Ésto se hace utilizando el comando `HLed` que es el _editor_ de _MLF_, de la siguiente forma:
 
 ```bash
-HLEd -l '*' -d dictl40 -i mlfphones.train mkphones-sp.led mlfwords.train
+$ HLEd -l '*' -d dictl40 -i mlfphones.train mkphones-sp.led mlfwords.train
 ```
 
 Como se puede ver, se utilizan como _inputs_ el diccionario (_dictl40_), el _MLF_ de palabras, y un archivo de configuración _mkphones-sp.led_, el cual contiene instrucciones necesarias para poder parsear las palabras contenidas en _mlfwords.train_ y transformalas en fonemas.
@@ -73,15 +73,15 @@ Para poder ejecutar el algoritmo de _Baum-Welch_, primero se necesita realizar u
 ### Inicialización
 
 ```bash
-ls ../datos/mfc/train/*/*.mfc > train.scp
-HCompV -C ../config/config -f 0.01 -m -S train.scp -M hmm0 hmm0/proto
+$ ls ../datos/mfc/train/*/*.mfc > train.scp
+$ HCompV -C ../config/config -f 0.01 -m -S train.scp -M hmm0 hmm0/proto
 ```
 
 Por último, es necesario crear los archivos que _HTK_ emplea para realizar el algoritmo _BW_ que son: _macros_ y _hmmdefs_. Para conseguirlos se utilizan dos _scripts_ provistos por la cátedra que transforman los datos en _proto_ y generan los primeros datos para poder ejecutar la primera corrida de _BW_.
 
 ```bash
-./go.gen-macros hmm0/vFloors hmm0/proto > hmm0/macros
-./go.gen-hmmdefs monophones+sil hmm0/proto > hmm0/hmmdefs
+$ ./go.gen-macros hmm0/vFloors hmm0/proto > hmm0/macros
+$ ./go.gen-hmmdefs monophones+sil hmm0/proto > hmm0/hmmdefs
 ```
 
 Una inspección a las primeras líneas del archivo _proto_ muestra lo siguiente:
@@ -136,10 +136,10 @@ De esta forma, se puede ver, cómo ese estado _inicial_ que reside en _proto_ se
 Se ejecuta el algoritmo _Baum-Welch_ mediante el comando `HERest`. Como se puede ver, se toma como modelo incial el que se generó anteriormente en hmm0, y la _re-estimación_ que genera _HTK_ se guarda en hmm1. Para poder construir mejores modelos, se realiza una segunda _re-estimación_ que se guarda en hmm2.
 
 ```bash
-HERest -C config -I phones.train -t 250.0 150.0 1000.0 -S train.scp \
+$ HERest -C config -I phones.train -t 250.0 150.0 1000.0 -S train.scp \
 	-H hmm0/macros -H hmm0/hmmdefs -M hmm1 monophones+sil
 
-HERest -C config -I phones.train -t 250.0 150.0 1000.0 -S train.scp \
+$ HERest -C config -I phones.train -t 250.0 150.0 1000.0 -S train.scp \
 	-H hmm1/macros -H hmm1/hmmdefs -M hmm2 monophones+sil
 ```
 
@@ -149,22 +149,24 @@ Cabe destacar, que el comando `HERest` no solo ejecuta el algoritmo de _Baum-Wel
 
 Hasta ahora la concatenación de palabras (que a su vez es una concatenación de fonemas) dentro de una frase, se hace tomando el estado final de una palabra y uniéndolo con el estado inicial de la siguiente, si lugar para que el hablante haga algún tipo de pausa entre medio. Esto funciona bien, salvo para los casos en los que hablante sí realiza una pausa corta entre palabras. Para que el modelo sea versátil y que permita ambas situaciones, es que se decide incluir un nuevo fonema llamado _sp: short pause_. Éste se modela de una forma distinta a cómo se hacen los demás modelos fonéticos, y se realiza de la siguiente forma:
 
-![Fig1. Modelo de Markov para los fonemas](phones-model.png)
-![Fig.2 Modelo de Markov para el estado _sp_](sp-model.png)
+![Modelo de Markov para los fonemas](phones-model.png)
+
+
+![Modelo de Markov para el estado _sp_](sp-model.png)
 
 Los parámetros que se utilizan en este único estado son los mismos que tiene el estado intermedio del modelo de tres estados del fonema _sil_. Para conseguir ésto, se copian los parámetros del modelo 2 (entrenado sin el fonema _sp_) al modelo 3 (teniendo en cuenta que este nuevo fonema contine únicamente un estado y que cuya matriz de transición es de 3x3 y no de 5x5 como las demás), se agrega el nuevo fonema al archvivo _monophones+sil+sp_, y se editan los archivos que conforman el modelo con un nuevo comando llamado `HHEd` (editor de modelos _hmm_). A éste se le pasa un archivo de configuración _sil.hed_, el cual contiene instrucciones de cómo modificar la matriz de transición de este nuevo fonema para contemplar las transiciones que se ven en la Fig.2.
 
 ```bash
-HHEd -H hmm3/macros -H hmm3/hmmdefs -M hmm4 sil.hed monophones+sil+sp
+$ HHEd -H hmm3/macros -H hmm3/hmmdefs -M hmm4 sil.hed monophones+sil+sp
 ```
 
 El archivo de configuración _sil.hed_ contiene lo siguiente:
 
 ```
-AT 2 4 0.2 {sil.transP}
-AT 4 2 0.2 {sil.transP}
-AT 1 3 0.3 {sp.transP}
-TI silst {sil.state[3], sp.state[2]}
+ AT 2 4 0.2 {sil.transP}
+ AT 4 2 0.2 {sil.transP}
+ AT 1 3 0.3 {sp.transP}
+ TI silst {sil.state[3], sp.state[2]}
 ```
 
 
