@@ -256,39 +256,53 @@ Finalmente, ésto se realiza para distinta cantidad de _Gaussianas_, que en este
 
 ## Reconocimiento
 
+Como se mencionó en el punto anterior, se va aplicar el algoritmo de _Viterbi_ para poder reconocer las palabras que se encuentran en el _set_ de _test_. Pero primero, hay que crear varios archivos que componen los _inputs_ de un nuevo comando de _HTK_ denominado _HVite_.
+
+### Inicialización
+
+- Vocabulario
 
 
-# Create vocabulary
+
 ```bash
-cat promptsl40.test | awk '{for(i=2;i<=NF;i++){print $i}}' | sort | uniq > vocab
-```
-# Create train.txt
-```bash
-cat promptsl40.test | awk '{for(i=2;i<=NF;i++){printf "%s ", $i} printf "/n"}' > train.txt
-```
-# Create languge model
-```bash
-/usr/local/speechapp/srilm/bin/i686-m64/ngram-count -order 2 -text train.txt -lm lml40  -ukndiscount2  -vocab vocab
+$ cat promptsl40.test | \
+	awk '{for(i=2;i<=NF;i++){print $i}}' | sort | uniq > vocab
 ```
 
-# Create 'wordnet' for HTK format
+- Lista de frases
+
 ```bash
-HBuild -n lml40 -s '<s>' '</s>' vocab wordnet
+$ cat promptsl40.test | \
+	awk '{for(i=2;i<=NF;i++){printf "%s ", $i} printf "/n"}' > train.txt
 ```
 
-# Do the Viterbi alg
+- Modelo lingüístico
+
 ```bash
-ls ../datos/mfc/test/*/*.mfc > test.scp
-HVite -C ../config/config -H ../modelos/hmm6/macros -H ../modelos/hmm6/hmmdefs -S test.scp
-	-l '*' -i recout.mlf -w ../lm/wordnet -p 0.0 -s 5.0 ../etc/dictl40 ../etc/monophones+sil
+$ /usr/local/speechapp/srilm/bin/i686-m64/ngram-count -order 2 \
+	-text train.txt -lm lml40  -ukndiscount2  -vocab vocab
+```
+
+- Red de palabras (en formato _HTK_)
+
+```bash
+$ HBuild -n lml40 -s '<s>' '</s>' vocab wordnet
+```
+
+### _Viterbi_
+
+```bash
+$ ls datos/mfc/test/*/*.mfc > test.scp
+
+$ HVite -C config -H hmm-1-3/macros -H hmm-1-3/hmmdefs -S test.scp \
+	-l '*' -i recout-1.mlf -w wordnet -p 0.0 -s 5.0 \
+	dictl40 monophones+sil+sp
 ```
 
 
-# Show and count results
+## Resultados
+
 ```bash
-HResults -f -t -I ../etc/mlfwords.test ../lm/vocab recout-1.mlf
+$ HResults -f -t -I mlfwords.test vocab recout-1.mlf > recout-1.stats
 ```
-
-
-
 
