@@ -28,6 +28,7 @@ Utilizando el comando `HCopy` se realiza una traducción de los archivos _WAV_ a
  SOURCEFORMAT = NIST
 ```
 
+
 ## Generación de la _word-list_ mediante el uso de _prompts_
 
 ```bash
@@ -37,6 +38,7 @@ cat promptsl40.train promptsl40.test |\
 
 Los archivos _promptsl40.train_ y _promptsl40.test_ contienen las transcripciones de todas las frases dichas en las grabaciones de la base de datos _latino40_. Para poder utilizar el _HTK_ se debe confeccionar un archivo que contenga todas las palabras dichas en cada una de las frases, para luego poder convertirlas en los sonidos fonéticos de cada una. 
 
+
 ## Creación del diccionario fonético
 
 Si bien ya se dispone de todas las frases transcriptas y de todas las palabras que en ellas aparecen, todavía no se tiene la pronunciación fonética de las mismas. Justamente ésto es lo que se necesita a la hora de poder entrenar, y reconecer posteriormente, frases nuevas. Para ello se utiliza el comando `HDMan` el cual toma como _inputs_ a la lista de palabras generadas anteriormente, una lista de todos los modelos fonéticos de nuestro idioma, y un diccionario completo de todas las palabras posibles junto con su descomposición en fonemas. Finalmente devuelve como _output_, un diccionario de las palabras utilizadas con su descomposición fonética.
@@ -44,6 +46,7 @@ Si bien ya se dispone de todas las frases transcriptas y de todas las palabras q
 ```bash
 HDMan -m -w wlistl40 -g global.ded -n monophones+sil dictl40 lexicon
 ```
+
 
 ## Transformación de los datos en lenguaje _HTK_
 
@@ -63,21 +66,23 @@ HLEd -l '*' -d dictl40 -i mlfphones.train mkphones-sp.led mlfwords.train
 Como se puede ver, se utilizan como _inputs_ el diccionario (_dictl40_), el _MLF_ de palabras, y un archivo de configuración _mkphones-sp.led_, el cual contiene instrucciones necesarias para poder parsear las palabras contenidas en _mlfwords.train_ y transformalas en fonemas.
 
 
+## Entrenamiento
 
+Para poder ejecutar el algoritmo de _Baum-Welch_, primero se necesita realizar una inicialización adecuada de los parámetros como ser, la media, la varianza y la matriz de transición de todos los estados de cada una de las palabras, para cada una de las frases. Para ello, se utiliza el comando `HCompV` que genera valores iniciales en un archivo de _output_ llamado _proto_.
 
-# Generate intial parameters: {means, vars, transmat}
-# (Previously create dirs: {hmm0, hmm1,...,hmm5})
 ```bash
-cd modelos
 ls ../datos/mfc/train/*/*.mfc > train.scp
 HCompV -C ../config/config -f 0.01 -m -S train.scp -M hmm0 hmm0/proto
 ```
 
-# Create 'macros' and 'hmmdefs' for proto
+Por último, es necesario crear los archivos que _HTK_ emplea para realizar el algoritmo _BW_ que son: _macros_ y _hmmdefs_. Para conseguirlos se utilizan dos _scripts_ provistos por la cátedra que transforman los datos en _proto_ y generan los primeros datos para poder ejecutar la primera corrida de _BW_.
+
 ```bash
-../scripts/go.gen-macros hmm0/vFloors hmm0/proto > hmm0/macros
-../scripts/go.gen-hmmdefs ../etc/monophones+sil hmm0/proto > hmm0/hmmdefs
+./go.gen-macros hmm0/vFloors hmm0/proto > hmm0/macros
+./go.gen-hmmdefs monophones+sil hmm0/proto > hmm0/hmmdefs
 ```
+
+
 
 # Train models with EM
 ```bash
