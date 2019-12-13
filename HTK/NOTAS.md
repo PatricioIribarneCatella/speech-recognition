@@ -47,16 +47,19 @@ Los archivos _promptsl40.train_ y _promptsl40.test_ contienen las transcripcione
 
 ## Creación del diccionario fonético
 
-Si bien ya se dispone de todas las frases transcriptas y de todas las palabras que en ellas aparecen, todavía no se tiene la pronunciación fonética de las mismas. Justamente ésto es lo que se necesita a la hora de poder entrenar, y reconocer posteriormente, frases nuevas. Para ello se utiliza el comando `HDMan` el cual toma como _inputs_ a la lista de palabras generadas anteriormente, una lista de todos los modelos fonéticos de nuestro idioma, y un diccionario completo de todas las palabras posibles junto con su descomposición en fonemas. Finalmente devuelve como _output_, un diccionario de las palabras utilizadas con su descomposición fonética.
+Si bien ya se dispone de todas las frases transcriptas y de todas las palabras que en ellas aparecen, todavía no se tiene la pronunciación fonética de las mismas. Justamente ésto es lo que se necesita a la hora de poder entrenar, y reconocer posteriormente, frases nuevas. Para ello se utiliza el comando `HDMan` el cual toma como _inputs_ a la lista de palabras generadas anteriormente (_wlistl40_), y un diccionario completo de todas las palabras posibles junto con su descomposición en fonemas (_lexicon_). Finalmente devuelve como _outputs_, un diccionario de las palabras utilizadas con su descomposición fonética, y una lista de todos los fonemas encontrados durante su creación. Ésta es la lista de modelos fonéticos a generar.
 
 ```bash
 $ HDMan -m -w wlistl40 -g global.ded -n monophones+sil dictl40 lexicon
 ```
 
+Un archivo interesante de explicar en este punto es _global.ded_, que es un archivo de edición del diccionario. Se utiliza el comando `AS sp` para agregar al final de cada una de las frases un fonema denominado _sp_. Luego se explicará el significado de este fonema y cuál es su utilidad, ya que ahora no se utilizará por tener una topología diferente del resto de los fonemas (todos poseen tres estados, éste posee sólo uno).
 
-## Transformación de los datos en lenguaje _HTK_
+Otro fonema que se agrega (al archivo _monophones+sil_) al finalizar la ejecución del comando `HDMan` es _sil_, que simboliza un _silencio_ con topología de tres estados como todos los otros fonemas. Éste se utiliza al comienzo y final de cada frase como se verá a continuación.
 
-En este momento se dispone de los siguientes datos: por un lado se tienen las transcripciones de las frases dichas en las grabaciones, y por otro se posee una descomposición fonética de cada una de las palabras que figuran en dichas frases. Lo que se necesita ahora, es transformar estos datos para que _HTK_ pueda interpretarlos adecuadamente. _HTK_ funciona con lo que se denominan _MLF (Master Label File)_. Éstos no son nada más ni nada menos que los mismos datos que están en los archivos _promptsl40_ pero con un formato particular para _HTK_. Se utiliza un _script_ proporcionado por la cátedra para convertirlos, de la siguiente manera:
+## Transcripciones (_labels_) en lenguaje _HTK_
+
+En este momento se dispone de los siguientes datos: por un lado se tienen las transcripciones de las frases dichas en las grabaciones, y por otro se posee una descomposición fonética de cada una de las palabras que figuran en dichas frases. Lo que se necesita ahora, es transformar estos datos para que _HTK_ pueda interpretarlos adecuadamente. _HTK_ funciona con lo que se denominan _MLF (Master Label File)_. Éstos no son nada más ni nada menos que los mismos datos que están en los archivos _promptsl40_ pero con un formato particular para _HTK_. Se utiliza un _script_ proporcionado por la cátedra para convertirlos en _label-files_ a nivel palabra, de la siguiente manera:
 
 ```bash
 $ prompts2mlf mlfwords.test promptsl40.test
@@ -69,7 +72,15 @@ Por último es necesario también, convertir el _MLF_ de palabras, mediante el u
 $ HLEd -l '*' -d dictl40 -i mlfphones.train mkphones-sp.led mlfwords.train
 ```
 
-Como se puede ver, se utilizan como _inputs_ el diccionario (_dictl40_), el _MLF_ de palabras, y un archivo de configuración _mkphones-sp.led_, el cual contiene instrucciones necesarias para poder parsear las palabras contenidas en _mlfwords.train_ y transformarlas en fonemas.
+Como se puede ver, se utilizan como _inputs_ el diccionario (_dictl40_), el _MLF_ de palabras, y un archivo de configuración _mkphones-sp.led_, el cual contiene instrucciones necesarias para poder parsear las palabras contenidas en _mlfwords.train_ y transformarlas en fonemas. Dichas instrucciones son:
+
+```
+ EX
+ IS sil sil
+ DE sp
+```
+
+De esta forma, el comando `EX` expande cada una de las palabras contenidas en cada una de las frases del _MLF_ e inserta sus respectivos fonemas (de acuerdo a lo que dice el diccionario), el comando `IS` inserta un fonema _sil_ al comienzo y al final de la frase, y el comando `DE` borra el fonema _sp_ agregado anteriormente, ya que en esta etapa no se desea entrenar el modelo conteniendo dicho fonema.
 
 
 ## Entrenamiento
