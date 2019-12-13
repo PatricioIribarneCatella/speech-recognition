@@ -6,8 +6,8 @@ Procesamiento del Habla (66.43) - FIUBA
 ## Generación del los coeficientes _MFCC_
 
 ```bash
-HCopy -A -V -T 1 -C config.hcopy -S genmfc.train > hcopy.train.log
-HCopy -A -V -T 1 -C config.hcopy -S genmfc.test > hcopy.test.log
+HCopy -A -V -T 1 -C config.hcopy -S genmfc.train 
+HCopy -A -V -T 1 -C config.hcopy -S genmfc.test 
 ```
 
 Utilizando el comando `HCopy` se realiza una traducción de los archivos _WAV_ a los coeficientes _MFCC: Mell Frequency Cepstrum Coefficients_. En los archivos _genmfc.train_ y _genmfc.test_ se especifica cómo debe realizarse ese mapeo, es decir, se indica cuál archivo _WAV_ corresponde con cuál archivo _MFCC_. Por otro lado, en el archivo _config.hcopy_ se declaran los atributos que deben tener los coeficientes _MFCC_ a generar. Por ejemplo, cuál va a ser el tamaño de ventana a utilizar, cuál va a ser la tasa de muestreo de dichas ventanas, el tipo de ventana a aplicar, y cuántos coeficientes dejar luego de la etapa de _liftering_, entre otros.
@@ -37,16 +37,18 @@ cat promptsl40.train promptsl40.test |\
 
 Los archivos _promptsl40.train_ y _promptsl40.test_ contienen las transcripciones de todas las frases dichas en las grabaciones de la base de datos _latino40_. Para poder utilizar el _HTK_ se debe confeccionar un archivo que contenga todas las palabras dichas en cada una de las frases, para luego poder convertirlas en los sonidos fonéticos de cada una. 
 
+## Creación del diccionario fonético
 
+Si bien ya se dispone de todas las frases transcriptas y de todas las palabras que en ellas aparecen, todavía no se tiene la pronunciación fonética de las mismas. Justamente ésto es lo que se necesita a la hora de poder entrenar, y reconecer posteriormente, frases nuevas. Para ello se utiliza el comando `HDMan` el cual toma como _inputs_ a la lista de palabras generadas anteriormente, una lista de todos los modelos fonéticos de nuestro idioma, y un diccionario completo de todas las palabras posibles junto con su descomposición en fonemas. Finalmente devuelve como _output_, un diccionario de las palabras utilizadas con su descomposición fonética.
 
-
-
-# Dictionary and phonos founded
 ```bash
-HDMan -m -w wlistl40 -g global.ded -n monophones+sil -l ../log/hdman.log dictl40 lexicon
+HDMan -m -w wlistl40 -g global.ded -n monophones+sil dictl40 lexicon
 ```
 
-# Convert prompts into MLF (words only)
+# Transformación de los datos en lenguaje _HTK_
+
+En este momento se dispone de los siguientes datos: por un lado se tienen las transcripciones de las frases dichas en las grabaciones, y por otro se posee una descomposición fonética de cada una de las palabras que figuran en dichas frases. Lo que se necesita ahora, es transformar estos datos para que el _HTK_ pueda interpretarlos adecuadamente. _HTK_ funciona con lo que se denominan _MLF (Master Label File)_. Éstos no son nada más ni nada menos que los mismos datos que están en los archivos _promptsl40_ pero con un formato particular para _HTK_. Se utiliza un _script_ proporcionado por la cátedra para convertirlos de la siguiente manera:
+
 ```bash
 prompts2mlf mlfwords.test promptsl40.test
 prompts2mlf mlfwords.train promptsl40.train
