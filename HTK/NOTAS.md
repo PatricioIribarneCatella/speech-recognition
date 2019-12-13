@@ -194,7 +194,7 @@ Hasta ahora la concatenación de palabras (que a su vez es una concatenación de
 ![Modelo de Markov para los fonemas](phones-model.png)
 
 
-![Modelo de Markov para el estado _sp_](sp-model.png)
+![Modelo de Markov para el fonema _sp_](sp-model.png)
 
 Los parámetros que se utilizan en este único estado son los mismos que tiene el estado intermedio del modelo de tres estados del fonema _sil_. Para conseguir ésto, se copian los parámetros del modelo 2 (entrenado sin el fonema _sp_) al modelo 3 (teniendo en cuenta que este nuevo fonema contiene únicamente un estado y cuya matriz de transición es de 3x3 y no de 5x5 como las demás), se agrega el nuevo fonema al archvivo _monophones+sil+sp_, y se editan los archivos que conforman el modelo con un nuevo comando llamado `HHEd` (editor de modelos _hmm_). A éste se le pasa un archivo de configuración _sil.hed_, el cual contiene instrucciones de cómo modificar la matriz de transición de este nuevo fonema para contemplar las transiciones que se ven en la Fig.2.
 
