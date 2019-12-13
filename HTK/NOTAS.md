@@ -45,7 +45,7 @@ Si bien ya se dispone de todas las frases transcriptas y de todas las palabras q
 HDMan -m -w wlistl40 -g global.ded -n monophones+sil dictl40 lexicon
 ```
 
-# Transformación de los datos en lenguaje _HTK_
+## Transformación de los datos en lenguaje _HTK_
 
 En este momento se dispone de los siguientes datos: por un lado se tienen las transcripciones de las frases dichas en las grabaciones, y por otro se posee una descomposición fonética de cada una de las palabras que figuran en dichas frases. Lo que se necesita ahora, es transformar estos datos para que el _HTK_ pueda interpretarlos adecuadamente. _HTK_ funciona con lo que se denominan _MLF (Master Label File)_. Éstos no son nada más ni nada menos que los mismos datos que están en los archivos _promptsl40_ pero con un formato particular para _HTK_. Se utiliza un _script_ proporcionado por la cátedra para convertirlos de la siguiente manera:
 
