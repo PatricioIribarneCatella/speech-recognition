@@ -73,8 +73,8 @@ Para poder ejecutar el algoritmo de _Baum-Welch_, primero se necesita realizar u
 ### Inicialización
 
 ```bash
-$ ls ../datos/mfc/train/*/*.mfc > train.scp
-$ HCompV -C ../config/config -f 0.01 -m -S train.scp -M hmm0 hmm0/proto
+$ ls datos/mfc/train/*/*.mfc > train.scp
+$ HCompV -C config -f 0.01 -m -S train.scp -M hmm0 hmm0/proto
 ```
 
 Por último, es necesario crear los archivos que _HTK_ emplea para realizar el algoritmo _BW_ que son: _macros_ y _hmmdefs_. Para conseguirlos se utilizan dos _scripts_ provistos por la cátedra que transforman los datos en _proto_ y generan los primeros datos para poder ejecutar la primera corrida de _BW_.
@@ -178,10 +178,10 @@ De esta forma, se puede ver, cómo ese estado _inicial_ que reside en _proto_ se
 Se ejecuta el algoritmo _Baum-Welch_ mediante el comando `HERest`. Como se puede ver, se toma como modelo incial el que se generó anteriormente en hmm0, y la _re-estimación_ que genera _HTK_ se guarda en hmm1. Para poder construir mejores modelos, se realiza una segunda _re-estimación_ que se guarda en hmm2.
 
 ```bash
-$ HERest -C config -I phones.train -t 250.0 150.0 1000.0 -S train.scp \
+$ HERest -C config -I mlfphones.train -t 250.0 150.0 1000.0 -S train.scp \
 	-H hmm0/macros -H hmm0/hmmdefs -M hmm1 monophones+sil
 
-$ HERest -C config -I phones.train -t 250.0 150.0 1000.0 -S train.scp \
+$ HERest -C config -I mlfphones.train -t 250.0 150.0 1000.0 -S train.scp \
 	-H hmm1/macros -H hmm1/hmmdefs -M hmm2 monophones+sil
 ```
 
@@ -196,7 +196,7 @@ Hasta ahora la concatenación de palabras (que a su vez es una concatenación de
 
 ![Modelo de Markov para el estado _sp_](sp-model.png)
 
-Los parámetros que se utilizan en este único estado son los mismos que tiene el estado intermedio del modelo de tres estados del fonema _sil_. Para conseguir ésto, se copian los parámetros del modelo 2 (entrenado sin el fonema _sp_) al modelo 3 (teniendo en cuenta que este nuevo fonema contine únicamente un estado y que cuya matriz de transición es de 3x3 y no de 5x5 como las demás), se agrega el nuevo fonema al archvivo _monophones+sil+sp_, y se editan los archivos que conforman el modelo con un nuevo comando llamado `HHEd` (editor de modelos _hmm_). A éste se le pasa un archivo de configuración _sil.hed_, el cual contiene instrucciones de cómo modificar la matriz de transición de este nuevo fonema para contemplar las transiciones que se ven en la Fig.2.
+Los parámetros que se utilizan en este único estado son los mismos que tiene el estado intermedio del modelo de tres estados del fonema _sil_. Para conseguir ésto, se copian los parámetros del modelo 2 (entrenado sin el fonema _sp_) al modelo 3 (teniendo en cuenta que este nuevo fonema contiene únicamente un estado y cuya matriz de transición es de 3x3 y no de 5x5 como las demás), se agrega el nuevo fonema al archvivo _monophones+sil+sp_, y se editan los archivos que conforman el modelo con un nuevo comando llamado `HHEd` (editor de modelos _hmm_). A éste se le pasa un archivo de configuración _sil.hed_, el cual contiene instrucciones de cómo modificar la matriz de transición de este nuevo fonema para contemplar las transiciones que se ven en la Fig.2.
 
 ```bash
 $ HHEd -H hmm3/macros -H hmm3/hmmdefs -M hmm4 sil.hed monophones+sil+sp
@@ -211,31 +211,24 @@ El archivo de configuración _sil.hed_ contiene lo siguiente:
  TI silst {sil.state[3], sp.state[2]}
 ```
 
+El comando _AT (add transition)_ agrega nuevas transiciones entre dos estados, y el comando _TI (tied-state)_ crea un _link_ para compartir dos estados. En este caso, se agregan transiciones para la matriz de transición del fonema _sil_ para unir los estados extremos 2 y 4 entre sí, y una nueva transición entre los estados inicial y final del fonema _sp_ 1 y 3. Esto último se hace para considerar los dos casos en que haya o no, una pausa entre palabras. Finalmente se crea un _link_ entre el estado intermedio del fonema _sil_ y el estado del fonema _sp_, para que se utilicen los mismos parámetros en las gaussianas utilizadas en dichos estados.
 
 
-# Copy model from hmm2 to hmm3
-# Add sp state referecing intermidiate silence state
-# create etc/sil.hed file for HHEd command (in book)
-
-
-# Create phones with 'sp' between words
-```bash
-HLEd -l '*' -d dictl40 -i phones1.train mkphones.led mlfwords.train
-```
-
-# Train model with 'sp' phono
+Por último, se debe modificar el _MLF_ de fonemas que se posee actualmente para incluir el nuevo fonema _sp_. Para ello, se vuelve a utilizar el comando `HLEd`. En este caso el archivo _mkphones.led_ es ligeramente modificado para que no remueva los fonemas _sp_ como sí se había hecho anteriormente.
 
 ```bash
-HERest -C ../config/config -I ../etc/phones1.train -t 250.0 150.0 1000.0 -S train.scp \
-	-H hmm4/macros -H hmm4/hmmdefs -M hmm5 ../etc/monophones+sil
-
-HERest -C ../config/config -I ../etc/phones1.train -t 250.0 150.0 1000.0 -S train.scp \
-	-H hmm5/macros -H hmm5/hmmdefs -M hmm6 ../etc/monophones+sil
+$ HLEd -l '*' -d dictl40 -i mlfphones1.train mkphones.led mlfwords.train
 ```
 
+Finalmente, se re-entrenan los modelos con dos pasadas como se hizo con los modelos previos.
 
+```bash
+$ HERest -C config -I mlfphones1.train -t 250.0 150.0 1000.0 -S train.scp \
+	-H hmm4/macros -H hmm4/hmmdefs -M hmm5 monophones+sil+sp
 
-
+$ HERest -C config -I mlfphones1.train -t 250.0 150.0 1000.0 -S train.scp \
+	-H hmm5/macros -H hmm5/hmmdefs -M hmm6 monophones+sil+sp
+```
 
 
 
