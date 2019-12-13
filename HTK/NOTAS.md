@@ -145,18 +145,34 @@ HERest -C config -I phones.train -t 250.0 150.0 1000.0 -S train.scp \
 
 Cabe destacar, que el comando `HERest` no solo ejecuta el algoritmo de _Baum-Welch_ sino que también construye como primera etapa, todos los modelos de cada uno de los fonemas disponibles en el archivo _monophones+sil_ y luego sobre éstos es que ejecuta dicho algoritmo.
 
-### Agregado del estado _sp: short pause_
+### Agregado del fonema _sp: short pause_
 
-Hasta ahora la concatenación de palabras (que a su vez es una concatenación de fonemas) dentro de una frase, se hace tomando el estado final de una palabra y uniéndolo con el estado inicial de la siguiente, si lugar para que el hablante haga algún tipo de pausa entre medio. Esto funciona bien, salvo para los casos en los que hablante sí realiza una pausa corta entre palabras. Para que el modelo sea versátil y que permita ambas situaciones, es que se decide incluir un nuevo estado llamado _sp: short pause_. Éste se modela de una forma distinta a cómo se hacen los demás modelos fonéticos, y se realiza de la siguiente forma:
+Hasta ahora la concatenación de palabras (que a su vez es una concatenación de fonemas) dentro de una frase, se hace tomando el estado final de una palabra y uniéndolo con el estado inicial de la siguiente, si lugar para que el hablante haga algún tipo de pausa entre medio. Esto funciona bien, salvo para los casos en los que hablante sí realiza una pausa corta entre palabras. Para que el modelo sea versátil y que permita ambas situaciones, es que se decide incluir un nuevo fonema llamado _sp: short pause_. Éste se modela de una forma distinta a cómo se hacen los demás modelos fonéticos, y se realiza de la siguiente forma:
+
+![Fig1. Modelo de Markov para los fonemas](phones-model.png)
+![Fig.2 Modelo de Markov para el estado _sp_](sp-model.png)
+
+Los parámetros que se utilizan en este único estado son los mismos que tiene el estado intermedio del modelo de tres estados del fonema _sil_. Para conseguir ésto, se copian los parámetros del modelo 2 (entrenado sin el fonema _sp_) al modelo 3 (teniendo en cuenta que este nuevo fonema contine únicamente un estado y que cuya matriz de transición es de 3x3 y no de 5x5 como las demás), se agrega el nuevo fonema al archvivo _monophones+sil+sp_, y se editan los archivos que conforman el modelo con un nuevo comando llamado `HHEd` (editor de modelos _hmm_). A éste se le pasa un archivo de configuración _sil.hed_, el cual contiene instrucciones de cómo modificar la matriz de transición de este nuevo fonema para contemplar las transiciones que se ven en la Fig.2.
+
+```bash
+HHEd -H hmm3/macros -H hmm3/hmmdefs -M hmm4 sil.hed monophones+sil+sp
+```
+
+El archivo de configuración _sil.hed_ contiene lo siguiente:
+
+```
+AT 2 4 0.2 {sil.transP}
+AT 4 2 0.2 {sil.transP}
+AT 1 3 0.3 {sp.transP}
+TI silst {sil.state[3], sp.state[2]}
+```
 
 
 
 # Copy model from hmm2 to hmm3
 # Add sp state referecing intermidiate silence state
 # create etc/sil.hed file for HHEd command (in book)
-```bash
-HHEd -H hmm3/macros -H hmm3/hmmdefs -M hmm4 ../etc/sil.hed ../etc/monophones+sil
-```
+
 
 # Create phones with 'sp' between words
 ```bash
@@ -164,9 +180,13 @@ HLEd -l '*' -d dictl40 -i phones1.train mkphones.led mlfwords.train
 ```
 
 # Train model with 'sp' phono
+
 ```bash
-HERest -C ../config/config -I ../etc/phones1.train -t 250.0 150.0 1000.0 -S train.scp -H hmm4/macros -H hmm4/hmmdefs \
-		-M hmm5 ../etc/monophones+sil
+HERest -C ../config/config -I ../etc/phones1.train -t 250.0 150.0 1000.0 -S train.scp \
+	-H hmm4/macros -H hmm4/hmmdefs -M hmm5 ../etc/monophones+sil
+
+HERest -C ../config/config -I ../etc/phones1.train -t 250.0 150.0 1000.0 -S train.scp \
+	-H hmm5/macros -H hmm5/hmmdefs -M hmm6 ../etc/monophones+sil
 ```
 
 
