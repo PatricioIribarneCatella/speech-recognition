@@ -1,7 +1,13 @@
-# NOTAS HTK
-
-Procesamiento del Habla (66.43) - FIUBA
-
+---
+title: "NOTAS HTK"
+author:
+- Patricio Iribarne Catella
+- Procesamiento del Habla (66.43) - FIUBA
+date:
+- 13 de Diciembre, 2019
+theme:
+- Copenhagen
+---
 
 ## Generación del los coeficientes _MFCC_
 
