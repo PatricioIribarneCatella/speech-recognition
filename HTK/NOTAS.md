@@ -47,7 +47,7 @@ Los archivos _promptsl40.train_ y _promptsl40.test_ contienen las transcripcione
 
 ## Creación del diccionario fonético
 
-Si bien ya se dispone de todas las frases transcriptas y de todas las palabras que en ellas aparecen, todavía no se tiene la pronunciación fonética de las mismas. Justamente ésto es lo que se necesita a la hora de poder entrenar, y reconecer posteriormente, frases nuevas. Para ello se utiliza el comando `HDMan` el cual toma como _inputs_ a la lista de palabras generadas anteriormente, una lista de todos los modelos fonéticos de nuestro idioma, y un diccionario completo de todas las palabras posibles junto con su descomposición en fonemas. Finalmente devuelve como _output_, un diccionario de las palabras utilizadas con su descomposición fonética.
+Si bien ya se dispone de todas las frases transcriptas y de todas las palabras que en ellas aparecen, todavía no se tiene la pronunciación fonética de las mismas. Justamente ésto es lo que se necesita a la hora de poder entrenar, y reconocer posteriormente, frases nuevas. Para ello se utiliza el comando `HDMan` el cual toma como _inputs_ a la lista de palabras generadas anteriormente, una lista de todos los modelos fonéticos de nuestro idioma, y un diccionario completo de todas las palabras posibles junto con su descomposición en fonemas. Finalmente devuelve como _output_, un diccionario de las palabras utilizadas con su descomposición fonética.
 
 ```bash
 $ HDMan -m -w wlistl40 -g global.ded -n monophones+sil dictl40 lexicon
@@ -69,7 +69,7 @@ Por último es necesario también, convertir el _MLF_ de palabras, mediante el u
 $ HLEd -l '*' -d dictl40 -i mlfphones.train mkphones-sp.led mlfwords.train
 ```
 
-Como se puede ver, se utilizan como _inputs_ el diccionario (_dictl40_), el _MLF_ de palabras, y un archivo de configuración _mkphones-sp.led_, el cual contiene instrucciones necesarias para poder parsear las palabras contenidas en _mlfwords.train_ y transformalas en fonemas.
+Como se puede ver, se utilizan como _inputs_ el diccionario (_dictl40_), el _MLF_ de palabras, y un archivo de configuración _mkphones-sp.led_, el cual contiene instrucciones necesarias para poder parsear las palabras contenidas en _mlfwords.train_ y transformarlas en fonemas.
 
 
 ## Entrenamiento
@@ -181,7 +181,7 @@ De esta forma, se puede ver, cómo ese estado _inicial_ que reside en _proto_ se
 
 ### _Baum-Welch_
 
-Se ejecuta el algoritmo _Baum-Welch_ mediante el comando `HERest`. Como se puede ver, se toma como modelo incial el que se generó anteriormente en hmm0, y la _re-estimación_ que genera _HTK_ se guarda en hmm1. Para poder construir mejores modelos, se realiza una segunda _re-estimación_ que se guarda en hmm2.
+Se ejecuta el algoritmo _Baum-Welch_ mediante el comando `HERest`. Como se puede ver, se toma como modelo inicial el que se generó anteriormente en _hmm0_, y la _re-estimación_ que genera _HTK_ se guarda en _hmm1_. Para poder construir mejores modelos, se realiza una segunda _re-estimación_ que se guarda en _hmm2_.
 
 ```bash
 $ HERest -C config -I mlfphones.train -t 250.0 150.0 1000.0 -S train.scp \
@@ -202,7 +202,7 @@ Hasta ahora la concatenación de palabras (que a su vez es una concatenación de
 
 ![Modelo de Markov para el fonema _sp_](sp-model.png)
 
-Los parámetros que se utilizan en este único estado son los mismos que tiene el estado intermedio del modelo de tres estados del fonema _sil_. Para conseguir ésto, se copian los parámetros del modelo 2 (entrenado sin el fonema _sp_) al modelo 3 (teniendo en cuenta que este nuevo fonema contiene únicamente un estado y cuya matriz de transición es de 3x3 y no de 5x5 como las demás), se agrega el nuevo fonema al archvivo _monophones+sil+sp_, y se editan los archivos que conforman el modelo con un nuevo comando llamado `HHEd` (editor de modelos _hmm_). A éste se le pasa un archivo de configuración _sil.hed_, el cual contiene instrucciones de cómo modificar la matriz de transición de este nuevo fonema para contemplar las transiciones que se ven en la Fig.2.
+Los parámetros que se utilizan en este único estado son los mismos que tiene el estado intermedio del modelo de tres estados del fonema _sil_. Para conseguir ésto, se copian los parámetros del modelo 2 (entrenado sin el fonema _sp_) al modelo 3 (teniendo en cuenta que este nuevo fonema contiene únicamente un estado y cuya matriz de transición es de 3x3 y no de 5x5 como las demás), se agrega el nuevo fonema al archivo _monophones+sil+sp_, y se editan los archivos que conforman el modelo con un nuevo comando llamado `HHEd` (editor de modelos _hmm_). A éste se le pasa un archivo de configuración _sil.hed_, el cual contiene instrucciones de cómo modificar la matriz de transición de este nuevo fonema para contemplar las transiciones que se ven en la figura 2 (Figure.2).
 
 ```bash
 $ HHEd -H hmm3/macros -H hmm3/hmmdefs -M hmm4 sil.hed monophones+sil+sp
@@ -238,7 +238,7 @@ $ HERest -C config -I mlfphones1.train -t 250.0 150.0 1000.0 -S train.scp \
 
 ### Modificación de la cantidad de _Gaussianas_
 
-Para poder mejor los modelos utilizados en el _reconocimiento_ y que la precisión sea cada vez mejor, los modelos se modifican para permitir que la cantidad de _Gaussianas_ en cada estado sea mayor que uno. De esta forma lo que se tiene es una mezcla de _Gaussianas_ es cada estado. En este se vuelve a utilizar el comando `HHEd`, para modificar los _hmmdefs_ y _macros_ del último modelo (en este caso el número 6). El archivo _editf2g_ continen instrucciones para modificar las medias y las varianzas de cada gaussiana actual y generar nuevas.
+Para poder mejor los modelos utilizados en el _reconocimiento_ y que la precisión sea cada vez mejor, los modelos se modifican para permitir que la cantidad de _Gaussianas_ en cada estado sea mayor que uno. De esta forma lo que se tiene es una mezcla de _Gaussianas_ es cada estado. En este se vuelve a utilizar el comando `HHEd`, para modificar los _hmmdefs_ y _macros_ del último modelo (en este caso el número 6). El archivo _editf2g_ contienen instrucciones para modificar las medias y las varianzas de cada gaussiana actual y generar nuevas.
 
 ```bash
 $ mv hmm6 hmm-1-3
@@ -286,7 +286,7 @@ $ cat promptsl40.train | \
 
 - Modelo lingüístico
 
-Utilizando otra aplicación, se construye el modelo lingüístico que es el que sirve para generar las probabilidades de aparición de cada una de las palabras. Éstas se calculan teniendo en cuenta la generación de bigramas como contexto de cada palabra.
+Utilizando otra aplicación, se construye el modelo lingüístico que es el que sirve para generar las probabilidades de aparición de cada una de las palabras. Éstas se calculan teniendo en cuenta la generación de _bigramas_ como contexto de cada palabra.
 
 ```bash
 $ /usr/local/speechapp/srilm/bin/i686-m64/ngram-count -order 2 \
