@@ -84,19 +84,72 @@ Por último, es necesario crear los archivos que _HTK_ emplea para realizar el a
 ./go.gen-hmmdefs monophones+sil hmm0/proto > hmm0/hmmdefs
 ```
 
+Una inspección a las primeras líneas del archivo _proto_ muestra lo siguiente:
 
+```
+~o
+<STREAMINFO> 1 39
+<VECSIZE> 39<NULLD><MFCC_D_A_0><DIAGC>
+~h "proto"
+<BEGINHMM>
+<NUMSTATES> 5
+<STATE> 2
+<MEAN> 39
+ -7.610806e+00 -4.806953e+00 3.343384e+00 -4.409364e+00 -3.260492e+00 -1.204213e+00 -1.027766e+00 1.860029e-01 -4.707533e-01 4.288140e-01 2.212882e-01 6.037196e-01 6.124635e+01 -3.317322e-04 3.268267e-04 -4.727239e-04 -1.007655e-04 5.489814e-04 4.647013e-04 -2.713677e-04 -2.866100e-05 -7.021228e-04 8.786149e-04 -6.662139e-05 -5.925029e-04 3.041824e-04 1.543509e-05 2.458352e-05 5.736159e-05 1.143577e-04 -1.902081e-05 -2.473935e-05 -6.246736e-05 -1.556318e-04 -6.903148e-05 -3.499124e-05 6.290742e-06 3.600528e-05 -6.744299e-05
+<VARIANCE> 39
+ 4.912927e+01 3.201925e+01 4.591970e+01 6.982524e+01 7.528906e+01 6.552078e+01 6.032398e+01 4.897406e+01 4.815772e+01 3.927904e+01 4.544141e+01 3.637407e+01 1.020039e+02 2.270554e+00 1.836995e+00 2.205474e+00 3.440568e+00 3.509371e+00 3.123952e+00 3.142145e+00 3.095316e+00 2.873873e+00 2.637191e+00 2.526928e+00 2.136164e+00 2.365552e+00 3.281180e-01 2.994132e-01 3.485773e-01 5.573778e-01 5.800697e-01 5.454681e-01 5.530963e-01 5.582977e-01 5.185300e-01 4.903159e-01 4.589276e-01 3.917152e-01 3.384365e-01
+<GCONST> 1.254290e+02
+```
+
+Acá se aprecian los parámetros para el primer estado (el número dos simboliza el primer estado dentro de los tres que conforman cada una de los modelos para cada uno de los fonemas disponibles, ya que el número uno está destinado al estado inicial). Para ver cómo funciona el _script_ `go.gen-hmmdefs`. se muestra a continuación una inspección de las primeras líneas del archivo _hmmdefs_.
+
+```
+~h "aa"
+<BEGINHMM>
+<NUMSTATES> 5
+<STATE> 2
+<MEAN> 39
+ -7.610806e+00 -4.806953e+00 3.343384e+00 -4.409364e+00 -3.260492e+00 -1.204213e+00 -1.027766e+00 1.860029e-01 -4.707533e-01 4.288140e-01 2.212882e-01 6.037196e-01 6.124635e+01 -3.317322e-04 3.268267e-04 -4.727239e-04 -1.007655e-04 5.489814e-04 4.647013e-04 -2.713677e-04 -2.866100e-05 -7.021228e-04 8.786149e-04 -6.662139e-05 -5.925029e-04 3.041824e-04 1.543509e-05 2.458352e-05 5.736159e-05 1.143577e-04 -1.902081e-05 -2.473935e-05 -6.246736e-05 -1.556318e-04 -6.903148e-05 -3.499124e-05 6.290742e-06 3.600528e-05 -6.744299e-05
+<VARIANCE> 39
+ 4.912927e+01 3.201925e+01 4.591970e+01 6.982524e+01 7.528906e+01 6.552078e+01 6.032398e+01 4.897406e+01 4.815772e+01 3.927904e+01 4.544141e+01 3.637407e+01 1.020039e+02 2.270554e+00 1.836995e+00 2.205474e+00 3.440568e+00 3.509371e+00 3.123952e+00 3.142145e+00 3.095316e+00 2.873873e+00 2.637191e+00 2.526928e+00 2.136164e+00 2.365552e+00 3.281180e-01 2.994132e-01 3.485773e-01 5.573778e-01 5.800697e-01 5.454681e-01 5.530963e-01 5.582977e-01 5.185300e-01 4.903159e-01 4.589276e-01 3.917152e-01 3.384365e-01
+<GCONST> 1.254290e+02
+
+....
+
+~h "bb"
+<BEGINHMM>
+<NUMSTATES> 5
+<STATE> 2
+<MEAN> 39
+ -7.610806e+00 -4.806953e+00 3.343384e+00 -4.409364e+00 -3.260492e+00 -1.204213e+00 -1.027766e+00 1.860029e-01 -4.707533e-01 4.288140e-01 2.212882e-01 6.037196e-01 6.124635e+01 -3.317322e-04 3.268267e-04 -4.727239e-04 -1.007655e-04 5.489814e-04 4.647013e-04 -2.713677e-04 -2.866100e-05 -7.021228e-04 8.786149e-04 -6.662139e-05 -5.925029e-04 3.041824e-04 1.543509e-05 2.458352e-05 5.736159e-05 1.143577e-04 -1.902081e-05 -2.473935e-05 -6.246736e-05 -1.556318e-04 -6.903148e-05 -3.499124e-05 6.290742e-06 3.600528e-05 -6.744299e-05
+<VARIANCE> 39
+ 4.912927e+01 3.201925e+01 4.591970e+01 6.982524e+01 7.528906e+01 6.552078e+01 6.032398e+01 4.897406e+01 4.815772e+01 3.927904e+01 4.544141e+01 3.637407e+01 1.020039e+02 2.270554e+00 1.836995e+00 2.205474e+00 3.440568e+00 3.509371e+00 3.123952e+00 3.142145e+00 3.095316e+00 2.873873e+00 2.637191e+00 2.526928e+00 2.136164e+00 2.365552e+00 3.281180e-01 2.994132e-01 3.485773e-01 5.573778e-01 5.800697e-01 5.454681e-01 5.530963e-01 5.582977e-01 5.185300e-01 4.903159e-01 4.589276e-01 3.917152e-01 3.384365e-01
+<GCONST> 1.254290e+02
+
+....
+```
+
+De esta forma, se puede ver, cómo ese estado _inicial_ que reside en _proto_ se copia para todos los fonemas disponibles en el archivo _monophones+sil_.
 
 ### _Baum-Welch_
 
-```bash
-HERest -C ../config/config -I ../etc/phones.train -t 250.0 150.0 1000.0 -S train.scp -H hmm0/macros -H hmm0/hmmdefs \
-		-M hmm1 ../etc/monophones+sil
+Se ejecuta el algoritmo _Baum-Welch_ mediante el comando `HERest`. Como se puede ver, se toma como modelo incial el que se generó anteriormente en hmm0, y la _re-estimación_ que genera _HTK_ se guarda en hmm1. Para poder construir mejores modelos, se realiza una segunda _re-estimación_ que se guarda en hmm2.
 
-HERest -C ../config/config -I ../etc/phones.train -t 250.0 150.0 1000.0 -S train.scp -H hmm1/macros -H hmm1/hmmdefs \
-		-M hmm2 ../etc/monophones+sil
+```bash
+HERest -C config -I phones.train -t 250.0 150.0 1000.0 -S train.scp \
+	-H hmm0/macros -H hmm0/hmmdefs -M hmm1 monophones+sil
+
+HERest -C config -I phones.train -t 250.0 150.0 1000.0 -S train.scp \
+	-H hmm1/macros -H hmm1/hmmdefs -M hmm2 monophones+sil
 ```
 
+Cabe destacar, que el comando `HERest` no solo ejecuta el algoritmo de _Baum-Welch_ sino que también construye como primera etapa, todos los modelos de cada uno de los fonemas disponibles en el archivo _monophones+sil_ y luego sobre éstos es que ejecuta dicho algoritmo.
+
 ### Agregado del estado _sp: short pause_
+
+Hasta ahora la concatenación de palabras (que a su vez es una concatenación de fonemas) dentro de una frase, se hace tomando el estado final de una palabra y uniéndolo con el estado inicial de la siguiente, si lugar para que el hablante haga algún tipo de pausa entre medio. Esto funciona bien, salvo para los casos en los que hablante sí realiza una pausa corta entre palabras. Para que el modelo sea versátil y que permita ambas situaciones, es que se decide incluir un nuevo estado llamado _sp: short pause_. Éste se modela de una forma distinta a cómo se hacen los demás modelos fonéticos, y se realiza de la siguiente forma:
+
+
 
 # Copy model from hmm2 to hmm3
 # Add sp state referecing intermidiate silence state
