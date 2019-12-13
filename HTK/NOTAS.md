@@ -262,7 +262,7 @@ Como se mencionó en el punto anterior, se va aplicar el algoritmo de _Viterbi_ 
 
 - Vocabulario
 
-
+Este archivo contiene todas las palabras utilizadas en el _set_ de _test_ de la base de datos. Equivalente al archivo _wlistl40_ generado anteriormente.
 
 ```bash
 $ cat promptsl40.test | \
@@ -271,25 +271,35 @@ $ cat promptsl40.test | \
 
 - Lista de frases
 
+Contiene todas las frases que se usaron para entrenar a los modelos y que ahora se utilizan para poder generar un modelo lingüístico.
+
 ```bash
-$ cat promptsl40.test | \
+$ cat promptsl40.train | \
 	awk '{for(i=2;i<=NF;i++){printf "%s ", $i} printf "/n"}' > train.txt
 ```
 
 - Modelo lingüístico
 
+Utilizando otra aplicación, se construye el modelo lingüístico que es el que sirve para generar las probabilidades de aparición de cada una de las palabras. Éstas se calculan teniendo en cuenta la generación de bigramas como contexto de cada palabra.
+
 ```bash
 $ /usr/local/speechapp/srilm/bin/i686-m64/ngram-count -order 2 \
-	-text train.txt -lm lml40  -ukndiscount2  -vocab vocab
+	-text train.txt -lm lml40 -ukndiscount2 -vocab vocab
 ```
 
 - Red de palabras (en formato _HTK_)
+
+Simplemente traduce el modelo lingüístico anterior a una red de palabras que es interpretada por _HTK_.
 
 ```bash
 $ HBuild -n lml40 -s '<s>' '</s>' vocab wordnet
 ```
 
 ### _Viterbi_
+
+Se utiliza el comando `HVite` considerando como _inputs_ al diccionario, a la red de palabras, a todos los fonemas, y a los datos propiamente dichos que son los _MFCC_ de _test_. Genera como _output_ el archivo _recout-1.mlf_ que es un archivo _MLF_ de las frases reconocidas.
+
+Cabe destacar, que este comando no sólo realiza el algoritmo de _Viterbi_ en sí, sino que también realiza una etapa de inicialización en la cual se construye toda la red estados posibles y por ende la correspondiente matriz de transición, teniendo en cuenta las probabilidades que se hallaron antes con el modelo lingüístico. Luego se ejecuta el algoritmo en cuestión, y finalmente se pasa a una etapa de decodificación en la cual se reconocen las palabras de cada una de las frases.
 
 ```bash
 $ ls datos/mfc/test/*/*.mfc > test.scp
@@ -299,10 +309,58 @@ $ HVite -C config -H hmm-1-3/macros -H hmm-1-3/hmmdefs -S test.scp \
 	dictl40 monophones+sil+sp
 ```
 
-
 ## Resultados
+
+Para mostrar los resultados estadísticos se procede a utilizar otro comando de _HTK_ denominado `HResults`, el cual toma como _inputs_ al _MLF_ de palabras del _set_ de _test_ (para poder corroborar a cuántas horaciones se identificó correctamente), el vocabulario (para poder saber a cuántas palabras se identificó correctamente), y el archivo que generó el comando anterior `HVite`.
 
 ```bash
 $ HResults -f -t -I mlfwords.test vocab recout-1.mlf > recout-1.stats
 ```
+
+Una inspección a este archivo nos muestra lo siguiente:
+
+```
+------------------------ Sentence Scores --------------------------
+====================== HTK Results Analysis =======================
+  Date: Wed Dec 11 17:31:42 2019
+  Ref : ../etc/mlfwords.test
+  Rec : recout-1.mlf
+-------------------------- File Results ---------------------------
+af14_001.rec:  100.00( 87.50)  [H=   8, D=  0, S=  0, I=  1, N=  8]
+Aligned transcription: af14_001.lab vs af14_001.rec
+ LAB:     no jugará el resto de la temporada regular 
+ REC: qué no jugará el resto de la temporada regular 
+
+....
+
+------------------------ Overall Results --------------------------
+SENT: %Correct=8.00 [H=79, S=908, N=987]
+WORD: %Corr=59.58, Acc=46.54 [H=4713, D=395, S=2802, I=1032, N=7910]
+===================================================================
+```
+
+Como se puede apreciar, la precisión en horaciones es del 8% y para las palabras del casi 60%. Se lo puede comparar con el modelo de 256 gaussianas, el cual se muestra a continuación:
+
+```
+------------------------ Sentence Scores --------------------------
+====================== HTK Results Analysis =======================
+  Date: Wed Dec 11 17:32:48 2019
+  Ref : ../etc/mlfwords.test
+  Rec : recout-256.mlf
+-------------------------- File Results ---------------------------
+af14_001.rec:  100.00(100.00)  [H=   8, D=  0, S=  0, I=  0, N=  8]
+af14_002.rec:   88.89( 88.89)  [H=   8, D=  0, S=  1, I=  0, N=  9]
+Aligned transcription: af14_002.lab vs af14_002.rec
+ LAB: me he repuesto más rápidamente de lo que pensaba 
+ REC: no he repuesto más rápidamente de lo que pensaba 
+
+....
+
+------------------------ Overall Results --------------------------
+SENT: %Correct=46.30 [H=457, S=530, N=987]
+WORD: %Corr=85.16, Acc=80.61 [H=6736, D=174, S=1000, I=360, N=7910]
+===================================================================
+```
+
+En este caso se ve cómo mejora la precisión, ya que para horaciones se tiene un 46%, y para palabras un 85%.
 
