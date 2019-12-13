@@ -311,7 +311,7 @@ $ HVite -C config -H hmm-1-3/macros -H hmm-1-3/hmmdefs -S test.scp \
 
 ## Resultados
 
-Para mostrar los resultados estadísticos se procede a utilizar otro comando de _HTK_ denominado `HResults`, el cual toma como _inputs_ al _MLF_ de palabras del _set_ de _test_ (para poder corroborar a cuántas horaciones se identificó correctamente), el vocabulario (para poder saber a cuántas palabras se identificó correctamente), y el archivo que generó el comando anterior `HVite`.
+Para mostrar los resultados estadísticos se procede a utilizar otro comando de _HTK_ denominado `HResults`, el cual toma como _inputs_ al _MLF_ de palabras del _set_ de _test_ (para poder corroborar a cuántas oraciones se identificó correctamente), el vocabulario (para poder saber a cuántas palabras se identificó correctamente), y el archivo que generó el comando anterior `HVite`.
 
 ```bash
 $ HResults -f -t -I mlfwords.test vocab recout-1.mlf > recout-1.stats
@@ -339,7 +339,7 @@ WORD: %Corr=59.58, Acc=46.54 [H=4713, D=395, S=2802, I=1032, N=7910]
 ===================================================================
 ```
 
-Como se puede apreciar, la precisión en horaciones es del 8% y para las palabras del casi 60%. Se lo puede comparar con el modelo de 256 gaussianas, el cual se muestra a continuación:
+Como se puede apreciar, la precisión en oraciones es del 8% y para las palabras del casi 60%. Se lo puede comparar con el modelo de 256 gaussianas, el cual se muestra a continuación:
 
 ```
 ------------------------ Sentence Scores --------------------------
@@ -362,5 +362,5 @@ WORD: %Corr=85.16, Acc=80.61 [H=6736, D=174, S=1000, I=360, N=7910]
 ===================================================================
 ```
 
-En este caso se ve cómo mejora la precisión, ya que para horaciones se tiene un 46%, y para palabras un 85%.
+En este caso se ve cómo mejora la precisión, ya que para oraciones se tiene un 46%, y para palabras un 85%.
 
