@@ -250,7 +250,7 @@ $ HERest -C config -I mlfphones1.train -t 250.0 150.0 1000.0 -S train.scp \
 	-H hmm-2-2/macros -H hmm-2-2/hmmdefs -M hmm-2-3 monophones+sil+sp
 ```
 
-Finalmente, ésto se realiza para distinta cantidad de _Gaussianas_, que en este caso van a ser las siguientes: _2, 4, 8, 16, 32, 64, 128, 256_, con lo cual se van a tener 9 modelos a los cuales se les va a aplicar el _reconocimiento_ utilizando el algoritmo de _Viterbi_.
+Finalmente, ésto se realiza para distinta cantidad de _Gaussianas_, que en este caso van a ser las siguientes: _2, 4, 8, 16, 32, 64, 128, 256_ con lo cual se van a tener 9 modelos a los cuales se les va a aplicar el _reconocimiento_ utilizando el algoritmo de _Viterbi_.
 
 
 
