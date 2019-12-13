@@ -47,18 +47,23 @@ HDMan -m -w wlistl40 -g global.ded -n monophones+sil dictl40 lexicon
 
 ## Transformación de los datos en lenguaje _HTK_
 
-En este momento se dispone de los siguientes datos: por un lado se tienen las transcripciones de las frases dichas en las grabaciones, y por otro se posee una descomposición fonética de cada una de las palabras que figuran en dichas frases. Lo que se necesita ahora, es transformar estos datos para que el _HTK_ pueda interpretarlos adecuadamente. _HTK_ funciona con lo que se denominan _MLF (Master Label File)_. Éstos no son nada más ni nada menos que los mismos datos que están en los archivos _promptsl40_ pero con un formato particular para _HTK_. Se utiliza un _script_ proporcionado por la cátedra para convertirlos de la siguiente manera:
+En este momento se dispone de los siguientes datos: por un lado se tienen las transcripciones de las frases dichas en las grabaciones, y por otro se posee una descomposición fonética de cada una de las palabras que figuran en dichas frases. Lo que se necesita ahora, es transformar estos datos para que _HTK_ pueda interpretarlos adecuadamente. _HTK_ funciona con lo que se denominan _MLF (Master Label File)_. Éstos no son nada más ni nada menos que los mismos datos que están en los archivos _promptsl40_ pero con un formato particular para _HTK_. Se utiliza un _script_ proporcionado por la cátedra para convertirlos, de la siguiente manera:
 
 ```bash
 prompts2mlf mlfwords.test promptsl40.test
 prompts2mlf mlfwords.train promptsl40.train
 ```
 
-Por último es necesario también, convertir el el _MLF_ de palabras, mediante el uso del diccionario creado en el paso anterior, a un _MLF_ de fonemas. Ésto se hace utilizando el comando `HLed` que es el _editor_ de _MLF_, de la siguiente forma:
+Por último es necesario también, convertir el _MLF_ de palabras, mediante el uso del diccionario creado en el paso anterior, a un _MLF_ de fonemas. Ésto se hace utilizando el comando `HLed` que es el _editor_ de _MLF_, de la siguiente forma:
 
 ```bash
 HLEd -l '*' -d dictl40 -i mlfphones.train mkphones-sp.led mlfwords.train
 ```
+
+Como se puede ver, se utilizan como _inputs_ el diccionario (_dictl40_), el _MLF_ de palabras, y un archivo de configuración _mkphones-sp.led_, el cual contiene instrucciones necesarias para poder parsear las palabras contenidas en _mlfwords.train_ y transformalas en fonemas.
+
+
+
 
 # Generate intial parameters: {means, vars, transmat}
 # (Previously create dirs: {hmm0, hmm1,...,hmm5})
