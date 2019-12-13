@@ -16,7 +16,7 @@ $ HCopy -A -V -T 1 -C config.hcopy -S genmfc.train
 $ HCopy -A -V -T 1 -C config.hcopy -S genmfc.test 
 ```
 
-Utilizando el comando `HCopy` se realiza una traducción de los archivos _WAV_ a los coeficientes _MFCC: Mell Frequency Cepstrum Coefficients_. En los archivos _genmfc.train_ y _genmfc.test_ se especifica cómo debe realizarse ese mapeo, es decir, se indica cuál archivo _WAV_ corresponde con cuál archivo _MFCC_. Por otro lado, en el archivo _config.hcopy_ se declaran los atributos que deben tener los coeficientes _MFCC_ a generar. Por ejemplo, cuál va a ser el tamaño de ventana a utilizar, cuál va a ser la tasa de muestreo de dichas ventanas, el tipo de ventana a aplicar, y cuántos coeficientes dejar luego de la etapa de _liftering_, entre otros.
+Utilizando el comando `HCopy` se realiza una traducción de los archivos _WAV_ a los coeficientes _MFCC: Mell Frequency Cepstrum Coefficients_. En los archivos _genmfc.train_ y _genmfc.test_ se especifica cómo debe realizarse ese mapeo, es decir, se indica cuál archivo _WAV_ corresponde con cuál archivo _MFCC_. Por otro lado, en el archivo _config.hcopy_ se declaran los atributos que deben tener los coeficientes _MFCC_ a generar. Por ejemplo, cuál va a ser el tamaño de ventana a utilizar, cuál va a ser la tasa de muestreo de dichas ventanas, el tipo de ventana a aplicar, cuántos coeficientes dejar luego de la etapa de _liftering_ y el formato de los archivos de audio (_NIST_ en este caso), entre otros.
 
 ```
  # Coding parameters
@@ -191,11 +191,11 @@ $ HERest -C config -I mlfphones.train -t 250.0 150.0 1000.0 -S train.scp \
 	-H hmm1/macros -H hmm1/hmmdefs -M hmm2 monophones+sil
 ```
 
-Cabe destacar, que el comando `HERest` no solo ejecuta el algoritmo de _Baum-Welch_ sino que también construye como primera etapa, todos los modelos de cada uno de los fonemas disponibles en el archivo _monophones+sil_ y luego sobre éstos es que ejecuta dicho algoritmo.
+Cabe destacar, que el comando `HERest` no solo ejecuta el algoritmo de _Baum-Welch_ sino que también construye como primera etapa, todos los modelos de cada uno de los fonemas disponibles en el archivo _monophones+sil_ y utilizando los _MLF_ anteriores construye la cadena de estados de cada frase. Finalmente sobre éstos es que ejecuta dicho algoritmo.
 
 ### Agregado del fonema _sp: short pause_
 
-Hasta ahora la concatenación de palabras (que a su vez es una concatenación de fonemas) dentro de una frase, se hace tomando el estado final de una palabra y uniéndolo con el estado inicial de la siguiente, si lugar para que el hablante haga algún tipo de pausa entre medio. Esto funciona bien, salvo para los casos en los que hablante sí realiza una pausa corta entre palabras. Para que el modelo sea versátil y que permita ambas situaciones, es que se decide incluir un nuevo fonema llamado _sp: short pause_. Éste se modela de una forma distinta a cómo se hacen los demás modelos fonéticos, y se realiza de la siguiente forma:
+Hasta ahora la concatenación de palabras (que a su vez es una concatenación de fonemas) dentro de una frase, se hace tomando el estado final de una palabra y uniéndolo con el estado inicial de la siguiente, sin lugar para que el hablante haga algún tipo de pausa entre medio. Esto funciona bien, salvo para los casos en los que el hablante sí realiza una pausa corta entre palabras. Para que el modelo sea versátil y que permita ambas situaciones, es que se decide incluir un nuevo fonema llamado _sp: short pause_. Éste se modela de una forma distinta a cómo se hacen los demás modelos fonéticos, y se realiza de la siguiente forma:
 
 ![Modelo de Markov para los fonemas](phones-model.png)
 
@@ -238,7 +238,7 @@ $ HERest -C config -I mlfphones1.train -t 250.0 150.0 1000.0 -S train.scp \
 
 ### Modificación de la cantidad de _Gaussianas_
 
-Para poder mejor los modelos utilizados en el _reconocimiento_ y que la precisión sea cada vez mejor, los modelos se modifican para permitir que la cantidad de _Gaussianas_ en cada estado sea mayor que uno. De esta forma lo que se tiene es una mezcla de _Gaussianas_ es cada estado. En este se vuelve a utilizar el comando `HHEd`, para modificar los _hmmdefs_ y _macros_ del último modelo (en este caso el número 6). El archivo _editf2g_ contienen instrucciones para modificar las medias y las varianzas de cada gaussiana actual y generar nuevas.
+Para poder mejor los modelos utilizados en el _reconocimiento_ y que la precisión sea cada vez mejor, los modelos se modifican para permitir que la cantidad de _Gaussianas_ en cada estado sea mayor que uno. De esta forma lo que se tiene es una mezcla de _Gaussianas_ es cada estado. En este se vuelve a utilizar el comando `HHEd`, para modificar los _hmmdefs_ y _macros_ del último modelo (en este caso el número 6). El archivo _editf2g_ contiene instrucciones para modificar las medias y las varianzas de cada gaussiana actual y generar nuevas medias y varianzas iniciales que serán re-entrenadas con _Baum-Welch_.
 
 ```bash
 $ mv hmm6 hmm-1-3
@@ -264,7 +264,7 @@ Finalmente, ésto se realiza para distinta cantidad de _Gaussianas_, que en este
 
 Como se mencionó en el punto anterior, se va aplicar el algoritmo de _Viterbi_ para poder reconocer las palabras que se encuentran en el _set_ de _test_. Pero primero, hay que crear varios archivos que componen los _inputs_ de un nuevo comando de _HTK_ denominado _HVite_.
 
-### Inicialización
+### Modelo de lenguaje: qué es y para qué sirve
 
 - Vocabulario
 
@@ -286,7 +286,7 @@ $ cat promptsl40.train | \
 
 - Modelo lingüístico
 
-Utilizando otra aplicación, se construye el modelo lingüístico que es el que sirve para generar las probabilidades de aparición de cada una de las palabras. Éstas se calculan teniendo en cuenta la generación de _bigramas_ como contexto de cada palabra.
+Utilizando otra aplicación, se construye el modelo lingüístico estadístico. Éste se calcula teniendo en cuenta la generación de _bigramas_ como contexto de cada palabra.
 
 ```bash
 $ /usr/local/speechapp/srilm/bin/i686-m64/ngram-count -order 2 \
@@ -295,7 +295,7 @@ $ /usr/local/speechapp/srilm/bin/i686-m64/ngram-count -order 2 \
 
 - Red de palabras (en formato _HTK_)
 
-Simplemente traduce el modelo lingüístico anterior a una red de palabras que es interpretada por _HTK_.
+Simplemente traduce el modelo lingüístico anterior a una red de palabras que es interpretada por _HTK_. Se le indica al _HTK_ cuáles son los _labels_ de comienzo (_start_) y de final (_end_) mediante el parámetro `-s` ya que dichas _labels_ se agregaron tanto a la lista de palabras como al diccionario.
 
 ```bash
 $ HBuild -n lml40 -s '<s>' '</s>' vocab wordnet
@@ -305,7 +305,7 @@ $ HBuild -n lml40 -s '<s>' '</s>' vocab wordnet
 
 Se utiliza el comando `HVite` considerando como _inputs_ al diccionario, a la red de palabras, a todos los fonemas, y a los datos propiamente dichos que son los _MFCC_ de _test_. Genera como _output_ el archivo _recout-1.mlf_ que es un archivo _MLF_ de las frases reconocidas.
 
-Cabe destacar, que este comando no sólo realiza el algoritmo de _Viterbi_ en sí, sino que también realiza una etapa de inicialización en la cual se construye toda la red estados posibles y por ende la correspondiente matriz de transición, teniendo en cuenta las probabilidades que se hallaron antes con el modelo lingüístico. Luego se ejecuta el algoritmo en cuestión, y finalmente se pasa a una etapa de decodificación en la cual se reconocen las palabras de cada una de las frases.
+Cabe destacar, que este comando no sólo realiza el algoritmo de _Viterbi_ en sí, sino que también realiza una etapa de inicialización en la cual se construye toda la red estados posibles y por ende la correspondiente matriz de transición, teniendo en cuenta las probabilidades que se hallaron antes con el modelo lingüístico. Luego se ejecuta el algoritmo en cuestión, y finalmente se pasa a una etapa de decodificación en la cual se encuentra la secuencia de palabras de la secuencia de estados óptima de cada frase.
 
 ```bash
 $ ls datos/mfc/test/*/*.mfc > test.scp
@@ -345,7 +345,7 @@ WORD: %Corr=59.58, Acc=46.54 [H=4713, D=395, S=2802, I=1032, N=7910]
 ===================================================================
 ```
 
-Como se puede apreciar, la precisión en oraciones es del 8% y para las palabras del casi 60%. Se lo puede comparar con el modelo de 256 gaussianas, el cual se muestra a continuación:
+Como se puede apreciar, la precisión en las oraciones es del 8% y para las palabras del casi 60%. Se lo puede comparar con el modelo de 256 gaussianas, el cual se muestra a continuación:
 
 ```
 ------------------------ Sentence Scores --------------------------
@@ -368,5 +368,37 @@ WORD: %Corr=85.16, Acc=80.61 [H=6736, D=174, S=1000, I=360, N=7910]
 ===================================================================
 ```
 
-En este caso se ve cómo mejora la precisión, ya que para oraciones se tiene un 46%, y para palabras un 85%.
+En este caso se ve cómo mejora la precisión, ya que para las oraciones se tiene un 46%, y para las palabras un 85%.
+
+A continuación se muestran los resultados completos para cada una de las cantidades de gaussianas elegidas.
+
+- 1 _Gaussiana_
+	- Oraciones: 8%
+	- Palabras: 59.58%
+- 2 _Gaussianas_
+	- Oraciones: 12.66%
+	- Palabras: 65.17%
+- 4 _Gaussianas_
+	- Oraciones: 23.51%
+	- Palabras: 72.45%
+- 8 _Gaussianas_
+	- Oraciones: 30.29%
+	- Palabras: 77.35%
+- 16 _Gaussianas_
+	- Oraciones: 35.66%
+	- Palabras: 80.57%
+- 32 _Gaussianas_
+	- Oraciones: 41.74%
+	- Palabras: 83.17%
+- 64 _Gaussianas_
+	- Oraciones: 45.49%
+	- Palabras: 84.72%
+- 128 _Gaussianas_
+	- Oraciones: 46.20%
+	- Palabras: 85.46%
+- 256 _Gaussianas_
+	- Oraciones: 46.30%
+	- Palabras: 85.16%
+
+Como se puede apreciar, con 256 _Gaussianas_ los resultados son los mejores con lo cual se decide utilizar este modelo.
 
