@@ -230,9 +230,33 @@ $ HERest -C config -I mlfphones1.train -t 250.0 150.0 1000.0 -S train.scp \
 	-H hmm5/macros -H hmm5/hmmdefs -M hmm6 monophones+sil+sp
 ```
 
+### Modificación de la cantidad de _Gaussianas_
+
+Para poder mejor los modelos utilizados en el _reconocimiento_ y que la precisión sea cada vez mejor, los modelos se modifican para permitir que la cantidad de _Gaussianas_ en cada estado sea mayor que uno. De esta forma lo que se tiene es una mezcla de _Gaussianas_ es cada estado. En este se vuelve a utilizar el comando `HHEd`, para modificar los _hmmdefs_ y _macros_ del último modelo (en este caso el número 6). El archivo _editf2g_ continen instrucciones para modificar las medias y las varianzas de cada gaussiana actual y generar nuevas.
+
+```bash
+$ mv hmm6 hmm-1-3
+
+$ HHEd -H hmm-1-3/macros -H hmm-1-3/hmmdefs -M hmm-2-1 editf2g monophones+sil+sp
+```
+
+Por último, se vuelve a re-entrenar el modelo con dos pasadas del algoritmo _Baum-Welch_.
+
+```bash
+$ HERest -C config -I mlfphones1.train -t 250.0 150.0 1000.0 -S train.scp \
+	-H hmm-2-1/macros -H hmm-2-1/hmmdefs -M hmm-2-2 monophones+sil+sp
+
+$ HERest -C config -I mlfphones1.train -t 250.0 150.0 1000.0 -S train.scp \
+	-H hmm-2-2/macros -H hmm-2-2/hmmdefs -M hmm-2-3 monophones+sil+sp
+```
+
+Finalmente, ésto se realiza para distinta cantidad de _Gaussianas_, que en este caso van a ser las siguientes: _2, 4, 8, 16, 32, 64, 128, 256_, con lo cual se van a tener 9 modelos a los cuales se les va a aplicar el _reconocimiento_ utilizando el algoritmo de _Viterbi_.
+
 
 
 ## Reconocimiento
+
+
 
 # Create vocabulary
 ```bash
@@ -259,14 +283,6 @@ HVite -C ../config/config -H ../modelos/hmm6/macros -H ../modelos/hmm6/hmmdefs -
 	-l '*' -i recout.mlf -w ../lm/wordnet -p 0.0 -s 5.0 ../etc/dictl40 ../etc/monophones+sil
 ```
 
-#####################################
-### Change how many gaussians are ###
-#####################################
-
-```bash
-HHEd -H hmm6/macros -H hmm6/hmmdefs -M hmm7 ../rec/editf2g ../etc/monophones+sil
-HERest -C ../config/config -I ../etc/phones1.train -t 250.0 150.0 1000.0 -S train.scp -H hmm7/macros -H hmm7/hmmdefs -M hmm8 ../etc/monophones+sil
-```
 
 # Show and count results
 ```bash
