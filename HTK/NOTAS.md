@@ -1,5 +1,5 @@
 ---
-title: "NOTAS HTK"
+title: "Notas HTK"
 author:
 - Patricio Iribarne Catella
 - Procesamiento del Habla (66.43) - FIUBA
