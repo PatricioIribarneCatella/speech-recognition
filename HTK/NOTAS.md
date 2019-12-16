@@ -53,7 +53,7 @@ Si bien ya se dispone de todas las frases transcriptas y de todas las palabras q
 $ HDMan -m -w wlistl40 -g global.ded -n monophones+sil dictl40 lexicon
 ```
 
-Un archivo interesante de explicar en este punto es _global.ded_, que es un archivo de edición del diccionario. Se utiliza el comando `AS sp` para agregar al final de cada una de las frases un fonema denominado _sp_. Luego se explicará el significado de este fonema y cuál es su utilidad, ya que ahora no se utilizará por tener una topología diferente del resto de los fonemas (todos poseen tres estados, éste posee sólo uno).
+Un archivo interesante de explicar en este punto es _global.ded_, que es un archivo de edición del diccionario. Se utiliza el comando `AS sp` para agregar al final de cada una de las palabras un fonema denominado _sp_. Luego se explicará el significado de este fonema y cuál es su utilidad, ya que ahora no se utilizará por tener una topología diferente del resto de los fonemas (todos poseen tres estados, éste posee sólo uno).
 
 Otro fonema que se agrega (al archivo _monophones+sil_) al finalizar la ejecución del comando `HDMan` es _sil_, que simboliza un _silencio_ con topología de tres estados como todos los otros fonemas. Éste se utiliza al comienzo y final de cada frase como se verá a continuación.
 
@@ -80,7 +80,7 @@ Como se puede ver, se utilizan como _inputs_ el diccionario (_dictl40_), el _MLF
  DE sp
 ```
 
-De esta forma, el comando `EX` expande cada una de las palabras contenidas en cada una de las frases del _MLF_ e inserta sus respectivos fonemas (de acuerdo a lo que dice el diccionario), el comando `IS` inserta un fonema _sil_ al comienzo y al final de la frase, y el comando `DE` borra el fonema _sp_ agregado anteriormente, ya que en esta etapa no se desea entrenar el modelo conteniendo dicho fonema.
+De esta forma, el comando `EX` expande cada una de las palabras contenidas en cada una de las frases del _MLF_ e inserta sus respectivos fonemas (de acuerdo a lo que dice el diccionario), el comando `IS` inserta un fonema _sil_ al comienzo y al final de la frase, y el comando `DE` borra el fonema _sp_ agregado anteriormente, ya que en esta etapa no se desea entrenar el modelo conteniendo dicho fonema. Se debe insertar manualmente el fonema _sil_ en el listado de fonemas a entrenar (_monophones+sil_) ya que no se encuentra en la lista original de palabras.
 
 
 ## Entrenamiento
@@ -249,7 +249,7 @@ $ HERest -C config -I mlfphones1.train -t 250.0 150.0 1000.0 -S train.scp \
 
 ### Modificación de la cantidad de _Gaussianas_
 
-Para poder mejor los modelos utilizados en el _reconocimiento_ y que la precisión sea cada vez mejor, los modelos se modifican para permitir que la cantidad de _Gaussianas_ en cada estado sea mayor que uno. De esta forma lo que se tiene es una mezcla de _Gaussianas_ es cada estado. En este se vuelve a utilizar el comando `HHEd`, para modificar los _hmmdefs_ y _macros_ del último modelo (en este caso el número 6). El archivo _editf2g_ contiene instrucciones para modificar las medias y las varianzas de cada gaussiana actual y generar nuevas medias y varianzas iniciales que serán re-entrenadas con _Baum-Welch_.
+Para poder mejor los modelos utilizados en el _reconocimiento_ y que la precisión sea cada vez mejor, los modelos se modifican para permitir que la cantidad de _Gaussianas_ en cada estado sea mayor que uno. De esta forma lo que se tiene es una mezcla de _Gaussianas_ es cada estado. En este se vuelve a utilizar el comando `HHEd`, para modificar los _hmmdefs_ y _macros_ del último modelo (en este caso el número 6). El archivo _editf2g_ contiene instrucciones para modificar las medias y las varianzas de cada gaussiana actual (produce pequeñasn perturbaciones en estos datos) y generar nuevas medias y varianzas iniciales que serán re-entrenadas con _Baum-Welch_.
 
 ```bash
 $ mv hmm6 hmm-1-3
@@ -411,5 +411,5 @@ A continuación se muestran los resultados completos para cada una de las cantid
 	- Oraciones: 46.30%
 	- Palabras: 85.16%
 
-Como se puede apreciar, con 256 _Gaussianas_ los resultados son los mejores con lo cual se decide utilizar este modelo.
+Como se puede apreciar, con 256 _Gaussianas_ los resultados para la cantidad de _oraciones_ correctas es mayor, pero el superado en cantidad de _palabras_ por el modelo de 128 _Gaussianas_. Ésto será un aspecto interesante para considerar a la hora de implementar un reconocedor de voz con palabras muy variadas, ya que aumenta la probabilidad de un mejor reconocimiento.
 
