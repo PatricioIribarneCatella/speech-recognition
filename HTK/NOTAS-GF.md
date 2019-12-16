@@ -1,7 +1,18 @@
-STEPS GF
-========
+---
+title: "Notas Gramática Finita"
+author:
+- Patricio Iribarne Catella
+- Procesamiento del Habla (66.43) - FIUBA
+date:
+- 16 de Diciembre, 2019
+theme:
+- Copenhagen
+---
 
-# Generate the grammar for audio recording
+## Generación de las reglas gramáticales
+
+
+
 grammar:
 
 ```
