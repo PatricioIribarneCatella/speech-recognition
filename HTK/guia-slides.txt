@@ -1,4 +1,8 @@
 La charla debería durar no más de media hora. Para lograr eso, van a tener que resumir, pero sin olvidar los conceptos y explicarlos con profundidad. Todo tiene que apuntar a entender cómo se hace un reconocedor. Para eso tienen que dedicar un tiempo a:
+
+
+Items
+=====
  
 - parametrización de los datos: explicar qué es y por qué usamos cepstrum básicamente. Qué cosas son relevantes a la parametrización y qué cosas no. 5 minutos.
 
@@ -8,6 +12,7 @@ La charla debería durar no más de media hora. Para lograr eso, van a tener que
 
 - por último, un ratito para explicar cómo llegaron al reconocedor de la voz de Uds. (gramática finita). Qué red de reconocimiento se planteó, qué cosa usaron del proyecto de Latino40, etc. 
 
+
+
 Tengan presente que nosotros queremos saber si se entendió cómo se hace un nuevo reconocedor, por ejemplo. Qué pasa si ahora querés desgrabar lo que va diciendo un profesor de alguna materia de la facultad mientras da su clase, qué más necesitás. O no necesitás nada más? Piensen que cuanto más demuestren que saben menos preguntamos nosotros. 
 
-Por favor, cuidar el tema del tiempo. Para una charla de 30 minutos, 30 transparencias es lo óptimo. Si cuando terminan de preparar la charla hay como 100, hay que resumir más, sin perder de vista que hay que decir cosas con contenido. 
