@@ -56,7 +56,7 @@ Se vuelve a utilizar el archivo _global.ded_, que es un archivo de edición del 
 
 ## El _libreto_
 
-Lo que nos hace falta ahora es algo donde esté escrito qué es lo que debemos decir al micrófono para luego poder reconocerlo, y esto es lo que se denomina _el libreto_ (o _prompts_ en inglés). Se utilizará un nuevo comando `HSGen` que toma como _inputs_ al diccionario creado en el paso anterior, y a lista de palabras (_wordnet_), para crear una cantidad variada de frases teniendo en cuenta la gramática propuesta. En este caso se generarán 200 frases.
+Lo que nos hace falta ahora es algo donde esté escrito qué es lo que debemos decir al micrófono para luego poder reconocerlo, y esto es lo que se denomina _el libreto_ (o _prompts_ en inglés). Se utilizará un nuevo comando `HSGen` que toma como _inputs_ al diccionario creado en el paso anterior, y a red de palabras (_wordnet_), para crear una cantidad variada de frases teniendo en cuenta la gramática propuesta. En este caso se generarán 200 frases.
 
 ```bash
 $ HSGen -l -n 200 wordnet.gf dictgf > promptsgf.test
