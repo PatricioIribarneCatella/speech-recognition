@@ -35,7 +35,7 @@ $ HParse grammar wordnet.gf
 from lexicongf and the wlistgf
 
 ```bash
-$ HDMan -m -w wlistgf -g global.ded -n monophones+sil -l ../log/hdmangf.log dictgf lexicongf
+$ HDMan -m -w wlistgf -g global.ded -n monophones+sil dictgf lexicongf
 ```
 
 
@@ -58,7 +58,7 @@ $ go.genmfcgf genmfc.gf
 ```
 
 ```bash
-$ HCopy -A -V -T 1 -C  ../config/gf.config.hcopy -S genmfc.gf > ../log/hcopy.gf.log
+$ HCopy -A -V -T 1 -C gf.config.hcopy -S genmfc.gf 
 ```
 
 
@@ -69,7 +69,9 @@ $ ls ../datos-gf/mfc/*.mfc > testgf.scp
 ```
 
 ```bash
-$ HVite -C ../config/config -H ../modelos/hmm-256-3/macros -H ../modelos/hmm-256-3/hmmdefs -S testgf.scp -l '*' -i recout-gf.mlf -w ../lm/wordnet.gf -p 0.0 -s 5.0 ../etc/dictgf ../etc/monophones+sil
+$ HVite -C config -H hmm-256-3/macros -H hmm-256-3/hmmdefs -S testgf.scp \
+	-l '*' -i recout-gf.mlf -w wordnet.gf -p 0.0 -s 5.0 \
+	dictgf monophones+sil
 ```
 
 
@@ -87,6 +89,6 @@ $ cat promptsgf.test | awk '{for(i=2;i<=NF;i++){print $i}}' | sort | uniq > voca
 
 # Show and count results
 ```bash
-$ HResults -f -t -I ../etc/mlfwordsgf.test ../lm/vocab.gf recout-gf.mlf
+$ HResults -f -t -I mlfwordsgf.test vocab.gf recout-gf.mlf
 ```
 
