@@ -110,7 +110,8 @@ $ prompts2mlf mlfwordsgf.test promptsgf.test
 Es necesario, al igual que lo fue en habla en general, tener un vocabulario con todas las palabras posibles de cada una de las frases sin repetir.
 
 ```bash
-$ cat promptsgf.test | awk '{for(i=2;i<=NF;i++){print $i}}' | sort | uniq > vocab.gf
+$ cat promptsgf.test | \
+	awk '{for(i=2;i<=NF;i++){print $i}}' | sort | uniq > vocab.gf
 ```
 
 Por último, se ejecuta el comando `HResults` de _HTK_, de la siguiente forma:
