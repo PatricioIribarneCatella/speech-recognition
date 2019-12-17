@@ -11,44 +11,82 @@ theme:
 
 ## Generación de las reglas gramáticales
 
-
-
-grammar:
+Teniendo en cuenta el lenguaje para describir reglas de gramática, según figura en el ejemplo del _htkbook_, se generaron las siguientes reglas.
 
 ```
 $digit = uno | dos | tres | cuatro | cinco | seis | siete | ocho | nueve | cero;
+
 $name = juan [ fernandez ] | pedro [ rodriguez ] | andrea [ perez ] | juana | patricia | andres;
-( enviar-com ( (llame | llamar) al <$digit> | ((llame | llamar) a | comuniqueme con) $name) enviar-fin )
+
+(enviar-com ( (llame | llamar) al <$digit> | ((llame | llamar) a | comuniqueme con) $name) enviar-fin)
 ```
 
-# Generate 'word-net' with the grammar
-HParse grammar wordnet.gf
+De acuerdo con ésto, existen dos variables llamadas `digit` y `name` cuyos valores se pueden combinar arbitrariamente respetando la regla de conformación de frases. Luego por ejemplo, es una frase válida _envia-com llame al 5468_ enviar-fin, o _envia-com comuniqueme con pedro rodriguez_, pero no es una oración permitida _envia-com llame a 7859 enviar-fin_, o _envia-com llamar al andres enviar-fin_. Esta gramática se guarda en el archivo _grammar_ utilizado en el siguiente paso.
 
-# Generate the dictionary from the lexicongf and the wlistgf
-HDMan -m -w wlistgf -g global.ded -n monophones+sil -l ../log/hdmangf.log dictgf lexicongf
+## Generación de la red de palabras
 
-# Considering dictgf (all the words and their phonetics) and 
-# wordnet.gf (the word net with their connections) generate random phrases
-HSGen -l -n 200 wordnet.gf dictgf > promptsgf.test
+```bash
+$ HParse grammar wordnet.gf
+```
+
+
+## Creación de un diccionario
+
+from lexicongf and the wlistgf
+
+```bash
+$ HDMan -m -w wlistgf -g global.ded -n monophones+sil -l ../log/hdmangf.log dictgf lexicongf
+```
+
+
+## El _libreto_
+
+dictgf (all the words and their phonetics) and 
+wordnet.gf (the word net with their connections) generate random phrases
+
+```bash
+$ HSGen -l -n 200 wordnet.gf dictgf > promptsgf.test
+```
+
+
+## Grabación y conversión a coeficientes _MFCC_
+
+### Generate genmfc.gf mapping for HCopy input
+
+```bash
+$ go.genmfcgf genmfc.gf
+```
+
+```bash
+$ HCopy -A -V -T 1 -C  ../config/gf.config.hcopy -S genmfc.gf > ../log/hcopy.gf.log
+```
+
+
+## Reconocimiento
+
+```bash
+$ ls ../datos-gf/mfc/*.mfc > testgf.scp
+```
+
+```bash
+$ HVite -C ../config/config -H ../modelos/hmm-256-3/macros -H ../modelos/hmm-256-3/hmmdefs -S testgf.scp -l '*' -i recout-gf.mlf -w ../lm/wordnet.gf -p 0.0 -s 5.0 ../etc/dictgf ../etc/monophones+sil
+```
+
+
+## Resultados
 
 # Convert prompts into MLF-words
-prompts2mlf mlfwordsgf.test promptsgf.test
+```bash
+$ prompts2mlf mlfwordsgf.test promptsgf.test
+```
 
 # Create vocabulary
-cat promptsgf.test | awk '{for(i=2;i<=NF;i++){print $i}}' | sort | uniq > vocab.gf
-
-# Generate genmfc.gf mapping for HCopy input
-go.genmfcgf genmfc.gf
-
-# Run HCopy
-HCopy -A -V -T 1 -C  ../config/gf.config.hcopy -S genmfc.gf > ../log/hcopy.gf.log
-# Inspect them with HList
-HList -h -e 1 mfc/1.mfc
-
-# Do the Viterbi alg
-ls ../datos-gf/mfc/*.mfc > testgf.scp
-HVite -C ../config/config -H ../modelos/hmm-256-3/macros -H ../modelos/hmm-256-3/hmmdefs -S testgf.scp -l '*' -i recout-gf.mlf -w ../lm/wordnet.gf -p 0.0 -s 5.0 ../etc/dictgf ../etc/monophones+sil
+```bash
+$ cat promptsgf.test | awk '{for(i=2;i<=NF;i++){print $i}}' | sort | uniq > vocab.gf
+```
 
 # Show and count results
-HResults -f -t -I ../etc/mlfwordsgf.test ../lm/vocab.gf recout-gf.mlf
+```bash
+$ HResults -f -t -I ../etc/mlfwordsgf.test ../lm/vocab.gf recout-gf.mlf
+```
 
