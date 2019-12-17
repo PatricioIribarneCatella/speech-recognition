@@ -14,11 +14,20 @@ theme:
 Teniendo en cuenta el lenguaje para describir reglas de gramática, según figura en el ejemplo del _htkbook_, se generaron las siguientes reglas.
 
 ```
-$digit = uno | dos | tres | cuatro | cinco | seis | siete | ocho | nueve | cero;
+$digit = uno | dos | tres | cuatro | cinco |
+	 	seis | siete | ocho | nueve | cero;
 
-$name = juan [ fernandez ] | pedro [ rodriguez ] | andrea [ perez ] | juana | patricia | andres;
+$name = juan [ fernandez ] |
+		pedro [ rodriguez ] |
+		andrea [ perez ] |
+		juana |
+		patricia |
+		andres;
 
-(enviar-com ( (llame | llamar) al <$digit> | ((llame | llamar) a | comuniqueme con) $name) enviar-fin)
+(enviar-com
+	((llame | llamar) al <$digit> |
+	((llame | llamar) a | comuniqueme con) $name)
+enviar-fin)
 ```
 
 De acuerdo con ésto, existen dos variables llamadas `digit` y `name` cuyos valores se pueden combinar arbitrariamente respetando la regla de conformación de frases. Luego por ejemplo, es una frase válida _envia-com llame al 5468_ enviar-fin, o _envia-com comuniqueme con pedro rodriguez_, pero no es una oración permitida _envia-com llame a 7859 enviar-fin_, o _envia-com llamar al andres enviar-fin_. Esta gramática se guarda en el archivo _grammar_ utilizado en el siguiente paso.
