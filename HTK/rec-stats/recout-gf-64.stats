@@ -1,0 +1,462 @@
+------------------------ Sentence Scores --------------------------
+====================== HTK Results Analysis =======================
+  Date: Tue Dec 17 11:18:15 2019
+  Ref : ../etc/mlfwordsgf.test
+  Rec : recout-gf-64.mlf
+-------------------------- File Results ---------------------------
+1.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+10.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+100.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+101.rec:   80.00( 80.00)  [H=   4, D=  0, S=  1, I=  0, N=  5]
+Aligned transcription: 101.lab vs 101.rec
+ LAB: enviar-com llame al tres enviar-fin 
+ REC: enviar-com llame al seis enviar-fin 
+102.rec:   83.33( 66.67)  [H=  10, D=  0, S=  2, I=  2, N= 12]
+Aligned transcription: 102.lab vs 102.rec
+ LAB: enviar-com llame al seis dos siete       tres tres cero     cero seis enviar-fin 
+ REC: enviar-com llame al seis dos siete cinco seis tres cero dos seis seis enviar-fin 
+103.rec:   90.00( 70.00)  [H=   9, D=  0, S=  1, I=  2, N= 10]
+Aligned transcription: 103.lab vs 103.rec
+ LAB: enviar-com llame al seis tres     uno        ocho tres siete enviar-fin 
+ REC: enviar-com llame al seis tres uno uno cuatro dos  tres siete enviar-fin 
+104.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+105.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+106.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+107.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+108.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+109.rec:  100.00(100.00)  [H=   7, D=  0, S=  0, I=  0, N=  7]
+11.rec:   81.48( 72.22)  [H=  44, D=  1, S=  9, I=  5, N= 54]
+Aligned transcription: 11.lab vs 11.rec
+ LAB: enviar-com llamar al nueve uno cero  seis cuatro cinco seis cero  ocho cero  siete seis cuatro seis           cero ocho cinco cero  nueve cinco cinco cinco cuatro ocho cuatro cero  uno uno cuatro ocho     cuatro cero  dos seis cuatro siete ocho ocho dos seis       cero ocho nueve siete uno cuatro tres uno      ocho  dos enviar-fin 
+ REC: enviar-com llamar al nueve uno cinco seis cuatro cinco seis cinco ocho cinco siete seis cuatro seis cinco uno cero      cinco cinco nueve cinco cinco cinco cuatro ocho cuatro cinco uno uno cuatro ocho dos cuatro cinco dos seis cuatro siete ocho ocho dos seis cinco uno  tres nueve siete uno cuatro tres uno cero cinco dos enviar-fin 
+110.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+111.rec:  100.00( 66.67)  [H=  18, D=  0, S=  0, I=  6, N= 18]
+Aligned transcription: 111.lab vs 111.rec
+ LAB: enviar-com llamar al nueve     tres ocho     tres ocho          uno dos dos dos     uno cuatro     tres cinco siete enviar-fin 
+ REC: enviar-com llamar al nueve dos tres ocho uno tres ocho seis uno uno dos dos dos uno uno cuatro uno tres cinco siete enviar-fin 
+112.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+113.rec:   94.44( 88.89)  [H=  17, D=  0, S=  1, I=  1, N= 18]
+Aligned transcription: 113.lab vs 113.rec
+ LAB: enviar-com llamar al seis dos cero dos cinco ocho cuatro cuatro cinco cinco     ocho seis nueve cinco enviar-fin 
+ REC: enviar-com llamar al seis dos seis dos cinco ocho cuatro cuatro cinco cinco uno ocho seis nueve cinco enviar-fin 
+114.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+115.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+116.rec:   60.00( 20.00)  [H=   3, D=  0, S=  2, I=  2, N=  5]
+Aligned transcription: 116.lab vs 116.rec
+ LAB: enviar-com llamar         a    andrea enviar-fin 
+ REC: enviar-com llamar al tres seis dos    enviar-fin 
+117.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+118.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+119.rec:  100.00(100.00)  [H=  26, D=  0, S=  0, I=  0, N= 26]
+12.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+120.rec:  100.00( 72.73)  [H=  11, D=  0, S=  0, I=  3, N= 11]
+Aligned transcription: 120.lab vs 120.rec
+ LAB: enviar-com llamar al     cuatro     cero     nueve ocho tres uno siete enviar-fin 
+ REC: enviar-com llamar al uno cuatro uno cero uno nueve ocho tres uno siete enviar-fin 
+121.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+122.rec:   80.00( 80.00)  [H=   4, D=  0, S=  1, I=  0, N=  5]
+Aligned transcription: 122.lab vs 122.rec
+ LAB: enviar-com llame a juana enviar-fin 
+ REC: enviar-com llame a juan  enviar-fin 
+123.rec:  100.00( 80.00)  [H=   5, D=  0, S=  0, I=  1, N=  5]
+Aligned transcription: 123.lab vs 123.rec
+ LAB: enviar-com llamar al      ocho enviar-fin 
+ REC: enviar-com llamar al cero ocho enviar-fin 
+124.rec:  100.00( 64.29)  [H=  14, D=  0, S=  0, I=  5, N= 14]
+Aligned transcription: 124.lab vs 124.rec
+ LAB: enviar-com llame al ocho uno     dos siete       ocho     tres cinco cero cero     nueve     enviar-fin 
+ REC: enviar-com llame al ocho uno dos dos siete cinco ocho uno tres cinco cero cero dos nueve dos enviar-fin 
+125.rec:   95.24( 52.38)  [H=  20, D=  0, S=  1, I=  9, N= 21]
+Aligned transcription: 125.lab vs 125.rec
+ LAB: enviar-com llame al cero tres tres tres     ocho seis seis cinco     nueve       cuatro     siete     cinco      uno       cero siete cero     cuatro     enviar-fin 
+ REC: enviar-com llame al cero tres tres tres uno ocho seis seis cinco uno nueve cinco cuatro dos siete dos cinco seis uno cinco seis siete cero dos cuatro uno enviar-fin 
+126.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+127.rec:  100.00( 85.71)  [H=  14, D=  0, S=  0, I=  2, N= 14]
+Aligned transcription: 127.lab vs 127.rec
+ LAB: enviar-com llamar al ocho     seis siete cero cinco nueve dos ocho ocho     dos enviar-fin 
+ REC: enviar-com llamar al ocho uno seis siete cero cinco nueve dos ocho ocho uno dos enviar-fin 
+128.rec:  100.00( 90.91)  [H=  11, D=  0, S=  0, I=  1, N= 11]
+Aligned transcription: 128.lab vs 128.rec
+ LAB: enviar-com llame al siete     dos ocho cuatro cinco siete siete enviar-fin 
+ REC: enviar-com llame al siete dos dos ocho cuatro cinco siete siete enviar-fin 
+129.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+13.rec:   85.71( 85.71)  [H=   6, D=  0, S=  1, I=  0, N=  7]
+Aligned transcription: 13.lab vs 13.rec
+ LAB: enviar-com llamar al uno ocho   dos enviar-fin 
+ REC: enviar-com llamar al uno cuatro dos enviar-fin 
+130.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+131.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+132.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+133.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+134.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+135.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+136.rec:   91.67( 83.33)  [H=  22, D=  0, S=  2, I=  2, N= 24]
+Aligned transcription: 136.lab vs 136.rec
+ LAB: enviar-com llamar al tres dos dos seis ocho   tres dos uno cero  dos cinco tres siete cinco siete ocho cuatro seis cuatro     nueve     enviar-fin 
+ REC: enviar-com llamar al tres dos dos seis cuatro tres dos uno cinco dos cinco tres siete cinco siete ocho cuatro seis cuatro uno nueve dos enviar-fin 
+137.rec:  100.00(100.00)  [H=  15, D=  0, S=  0, I=  0, N= 15]
+138.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+139.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+14.rec:   81.82( 78.79)  [H=  27, D=  0, S=  6, I=  1, N= 33]
+Aligned transcription: 14.lab vs 14.rec
+ LAB: enviar-com llamar al uno cinco cinco tres cuatro nueve     ocho cero  dos nueve nueve dos nueve cero  cinco cuatro nueve tres uno siete siete cuatro cero  nueve uno cero  siete ocho dos enviar-fin 
+ REC: enviar-com llamar al uno cinco cinco tres cuatro nueve uno tres cinco dos nueve nueve dos nueve cinco cinco cuatro nueve seis uno siete siete cuatro cinco nueve uno cinco siete ocho dos enviar-fin 
+140.rec:  100.00(100.00)  [H=   7, D=  0, S=  0, I=  0, N=  7]
+141.rec:  100.00(100.00)  [H=  13, D=  0, S=  0, I=  0, N= 13]
+142.rec:  100.00(100.00)  [H=  13, D=  0, S=  0, I=  0, N= 13]
+143.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+144.rec:   94.29( 74.29)  [H=  33, D=  0, S=  2, I=  7, N= 35]
+Aligned transcription: 144.lab vs 144.rec
+ LAB: enviar-com llamar al      uno dos dos ocho ocho seis nueve siete nueve dos dos ocho uno tres dos cuatro     tres cinco dos nueve     dos dos nueve       cero  seis ocho     seis cuatro     cuatro nueve     seis enviar-fin 
+ REC: enviar-com llamar al cero dos dos dos ocho ocho seis nueve siete nueve dos dos ocho uno tres dos cuatro uno tres cinco dos nueve uno dos dos nueve cinco cinco seis ocho uno seis cuatro dos cuatro nueve dos seis enviar-fin 
+145.rec:   90.00( 80.00)  [H=   9, D=  0, S=  1, I=  1, N= 10]
+Aligned transcription: 145.lab vs 145.rec
+ LAB: enviar-com llame al uno cero  tres cinco seis      ocho enviar-fin 
+ REC: enviar-com llame al uno cinco tres cinco seis cero ocho enviar-fin 
+146.rec:   94.44( 94.44)  [H=  17, D=  0, S=  1, I=  0, N= 18]
+Aligned transcription: 146.lab vs 146.rec
+ LAB: enviar-com llame al cero cero seis ocho cinco cuatro dos  tres ocho nueve nueve dos nueve nueve enviar-fin 
+ REC: enviar-com llame al cero cero seis ocho cinco cuatro tres tres ocho nueve nueve dos nueve nueve enviar-fin 
+147.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+148.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+149.rec:   60.00( 40.00)  [H=   3, D=  0, S=  2, I=  1, N=  5]
+Aligned transcription: 149.lab vs 149.rec
+ LAB: enviar-com llamar    a     pedro enviar-fin 
+ REC: enviar-com llamar al cinco uno   enviar-fin 
+15.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+150.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+151.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+152.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+153.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+154.rec:   80.00( 80.00)  [H=   4, D=  0, S=  1, I=  0, N=  5]
+Aligned transcription: 154.lab vs 154.rec
+ LAB: enviar-com comuniqueme con andrea enviar-fin 
+ REC: enviar-com comuniqueme con andres enviar-fin 
+155.rec:   80.00( 60.00)  [H=   4, D=  0, S=  1, I=  1, N=  5]
+Aligned transcription: 155.lab vs 155.rec
+ LAB: enviar-com comuniqueme con      juana     enviar-fin 
+ REC: enviar-com comuniqueme con juan fernandez enviar-fin 
+156.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+157.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+158.rec:  100.00(100.00)  [H=  11, D=  0, S=  0, I=  0, N= 11]
+159.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+16.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+160.rec:  100.00( 84.21)  [H=  19, D=  0, S=  0, I=  3, N= 19]
+Aligned transcription: 160.lab vs 160.rec
+ LAB: enviar-com llamar al ocho      dos uno siete     uno siete uno dos     dos nueve dos cuatro ocho dos siete enviar-fin 
+ REC: enviar-com llamar al ocho tres dos uno siete uno uno siete uno dos uno dos nueve dos cuatro ocho dos siete enviar-fin 
+161.rec:   60.00(  0.00)  [H=   3, D=  0, S=  2, I=  3, N=  5]
+Aligned transcription: 161.lab vs 161.rec
+ LAB: enviar-com llamar              a   juana enviar-fin 
+ REC: enviar-com llamar al uno nueve uno dos   enviar-fin 
+162.rec:   90.91( 86.36)  [H=  20, D=  0, S=  2, I=  1, N= 22]
+Aligned transcription: 162.lab vs 162.rec
+ LAB: enviar-com llame al cinco uno cuatro cinco ocho     dos cero cero  seis nueve siete uno cero  ocho tres cinco dos dos enviar-fin 
+ REC: enviar-com llame al cinco uno cuatro cinco ocho uno dos cero cinco seis nueve siete uno cinco ocho tres cinco dos dos enviar-fin 
+163.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+164.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+165.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+166.rec:  100.00( 75.00)  [H=   8, D=  0, S=  0, I=  2, N=  8]
+Aligned transcription: 166.lab vs 166.rec
+ LAB: enviar-com llamar al dos cinco uno cero           enviar-fin 
+ REC: enviar-com llamar al dos cinco uno cero uno cinco enviar-fin 
+167.rec:  100.00( 66.67)  [H=   6, D=  0, S=  0, I=  2, N=  6]
+Aligned transcription: 167.lab vs 167.rec
+ LAB: enviar-com llamar al cuatro cuatro         enviar-fin 
+ REC: enviar-com llamar al cuatro cuatro dos uno enviar-fin 
+168.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+169.rec:  100.00(100.00)  [H=  18, D=  0, S=  0, I=  0, N= 18]
+17.rec:   90.32( 90.32)  [H=  28, D=  0, S=  3, I=  0, N= 31]
+Aligned transcription: 17.lab vs 17.rec
+ LAB: enviar-com llamar al dos cero  nueve cinco siete nueve siete cero  dos cuatro siete tres seis tres dos cuatro nueve uno nueve ocho cuatro cuatro ocho tres dos cero  cinco enviar-fin 
+ REC: enviar-com llamar al dos cinco nueve cinco siete nueve siete cinco dos cuatro siete tres seis tres dos cuatro nueve uno nueve ocho cuatro cuatro ocho tres dos cinco cinco enviar-fin 
+170.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+171.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+172.rec:   91.67( 83.33)  [H=  22, D=  0, S=  2, I=  2, N= 24]
+Aligned transcription: 172.lab vs 172.rec
+ LAB: enviar-com llame al dos ocho cero ocho nueve siete seis dos cinco cinco uno tres cuatro     uno siete ocho cero  ocho      nueve cero  enviar-fin 
+ REC: enviar-com llame al dos ocho cero ocho nueve siete seis dos cinco cinco uno tres cuatro uno uno siete ocho cinco ocho seis nueve cinco enviar-fin 
+173.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+174.rec:  100.00( 60.00)  [H=   5, D=  0, S=  0, I=  2, N=  5]
+Aligned transcription: 174.lab vs 174.rec
+ LAB: enviar-com llamar al cero         enviar-fin 
+ REC: enviar-com llamar al cero uno uno enviar-fin 
+175.rec:  100.00( 80.00)  [H=   5, D=  0, S=  0, I=  1, N=  5]
+Aligned transcription: 175.lab vs 175.rec
+ LAB: enviar-com llame al cuatro     enviar-fin 
+ REC: enviar-com llame al cuatro dos enviar-fin 
+176.rec:   85.71( 57.14)  [H=   6, D=  0, S=  1, I=  2, N=  7]
+Aligned transcription: 176.lab vs 176.rec
+ LAB: enviar-com llamar al nueve ocho   uno         enviar-fin 
+ REC: enviar-com llamar al nueve cuatro uno dos dos enviar-fin 
+177.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+178.rec:  100.00( 80.00)  [H=   5, D=  0, S=  0, I=  1, N=  5]
+Aligned transcription: 178.lab vs 178.rec
+ LAB: enviar-com llamar a juan           enviar-fin 
+ REC: enviar-com llamar a juan fernandez enviar-fin 
+179.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+18.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+180.rec:  100.00( 43.75)  [H=  16, D=  0, S=  0, I=  9, N= 16]
+Aligned transcription: 180.lab vs 180.rec
+ LAB: enviar-com llame al siete     cuatro       cinco seis dos seis ocho     cero     dos     cuatro     uno cinco             enviar-fin 
+ REC: enviar-com llame al siete dos cuatro cinco cinco seis dos seis ocho uno cero uno dos uno cuatro uno uno cinco dos dos uno enviar-fin 
+181.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+182.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+183.rec:  100.00( 36.36)  [H=  11, D=  0, S=  0, I=  7, N= 11]
+Aligned transcription: 183.lab vs 183.rec
+ LAB: enviar-com llamar al     ocho     cero     siete     uno cuatro     siete cuatro         enviar-fin 
+ REC: enviar-com llamar al dos ocho uno cero uno siete uno uno cuatro dos siete cuatro uno uno enviar-fin 
+184.rec:  100.00( 82.76)  [H=  29, D=  0, S=  0, I=  5, N= 29]
+Aligned transcription: 184.lab vs 184.rec
+ LAB: enviar-com llamar al cero     uno seis seis siete siete seis seis cuatro dos uno cero cuatro tres cinco ocho uno     nueve       nueve seis nueve nueve cinco uno       nueve      enviar-fin 
+ REC: enviar-com llamar al cero uno uno seis seis siete siete seis seis cuatro dos uno cero cuatro tres cinco ocho uno dos nueve cinco nueve seis nueve nueve cinco uno cinco nueve tres enviar-fin 
+185.rec:   80.00( 80.00)  [H=   4, D=  0, S=  1, I=  0, N=  5]
+Aligned transcription: 185.lab vs 185.rec
+ LAB: enviar-com llame a juan   enviar-fin 
+ REC: enviar-com llame a andres enviar-fin 
+186.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+187.rec:   60.00(-20.00)  [H=   3, D=  0, S=  2, I=  4, N=  5]
+Aligned transcription: 187.lab vs 187.rec
+ LAB: enviar-com llamar                 a   juana enviar-fin 
+ REC: enviar-com llamar al cero uno uno uno dos   enviar-fin 
+188.rec:   80.00( 80.00)  [H=   4, D=  0, S=  1, I=  0, N=  5]
+Aligned transcription: 188.lab vs 188.rec
+ LAB: enviar-com llame a juana enviar-fin 
+ REC: enviar-com llame a juan  enviar-fin 
+189.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+19.rec:   98.25( 89.47)  [H=  56, D=  0, S=  1, I=  5, N= 57]
+Aligned transcription: 19.lab vs 19.rec
+ LAB: enviar-com llamar al siete dos     ocho tres seis siete cuatro tres seis dos seis cinco cuatro cero ocho uno siete cuatro seis uno ocho seis dos dos nueve nueve siete       nueve dos cinco seis uno cuatro dos cuatro ocho cero tres ocho     cuatro cinco cinco dos dos tres     tres tres uno dos ocho cuatro uno ocho     enviar-fin 
+ REC: enviar-com llamar al siete dos uno tres tres seis siete cuatro tres seis dos seis cinco cuatro cero ocho uno siete cuatro seis uno ocho seis dos dos nueve nueve siete nueve nueve dos cinco seis uno cuatro dos cuatro ocho cero tres ocho uno cuatro cinco cinco dos dos tres dos tres tres uno dos ocho cuatro uno ocho uno enviar-fin 
+190.rec:  100.00( 96.23)  [H=  53, D=  0, S=  0, I=  2, N= 53]
+Aligned transcription: 190.lab vs 190.rec
+ LAB: enviar-com llame al dos cero cinco tres tres dos ocho nueve ocho cero uno uno seis nueve nueve seis nueve seis tres tres dos seis cuatro cinco seis cero seis cero uno cuatro cinco seis ocho nueve tres cinco dos cero cinco uno seis nueve tres cuatro tres cinco uno     uno     cinco enviar-fin 
+ REC: enviar-com llame al dos cero cinco tres tres dos ocho nueve ocho cero uno uno seis nueve nueve seis nueve seis tres tres dos seis cuatro cinco seis cero seis cero uno cuatro cinco seis ocho nueve tres cinco dos cero cinco uno seis nueve tres cuatro tres cinco uno dos uno dos cinco enviar-fin 
+191.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+192.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+193.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+194.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+195.rec:  100.00( 80.00)  [H=   5, D=  0, S=  0, I=  1, N=  5]
+Aligned transcription: 195.lab vs 195.rec
+ LAB: enviar-com llame al cinco     enviar-fin 
+ REC: enviar-com llame al cinco uno enviar-fin 
+196.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+197.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+198.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+199.rec:   91.67( 77.08)  [H=  44, D=  0, S=  4, I=  7, N= 48]
+Aligned transcription: 199.lab vs 199.rec
+ LAB: enviar-com llame al cinco cinco tres seis tres nueve siete siete uno cinco seis siete siete cinco cinco seis tres siete     uno nueve          cero uno dos     uno seis cero  seis cuatro       cinco cinco cuatro cero ocho cero  uno dos ocho cuatro seis uno dos cinco nueve cuatro         enviar-fin 
+ REC: enviar-com llame al cinco cinco tres seis tres nueve siete siete uno cinco seis siete siete cinco cinco seis tres siete uno uno nueve seis uno uno  uno dos uno uno seis cinco seis cuatro cinco cinco cinco cuatro seis ocho cinco uno dos ocho cuatro seis uno dos cinco nueve cuatro dos dos enviar-fin 
+2.rec:  100.00( 90.91)  [H=  11, D=  0, S=  0, I=  1, N= 11]
+Aligned transcription: 2.lab vs 2.rec
+ LAB: enviar-com llamar al ocho dos cuatro nueve cinco cinco ocho     enviar-fin 
+ REC: enviar-com llamar al ocho dos cuatro nueve cinco cinco ocho uno enviar-fin 
+20.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+200.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+21.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+22.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+23.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+24.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+25.rec:   88.89( 77.78)  [H=   8, D=  0, S=  1, I=  1, N=  9]
+Aligned transcription: 25.lab vs 25.rec
+ LAB: enviar-com llamar al     ocho dos cero  dos tres enviar-fin 
+ REC: enviar-com llamar al uno ocho dos cinco dos tres enviar-fin 
+26.rec:   60.00( 60.00)  [H=   3, D=  0, S=  2, I=  0, N=  5]
+Aligned transcription: 26.lab vs 26.rec
+ LAB: enviar-com llamar a  andres enviar-fin 
+ REC: enviar-com llamar al seis   enviar-fin 
+27.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+28.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+29.rec:   90.48( 90.48)  [H=  19, D=  0, S=  2, I=  0, N= 21]
+Aligned transcription: 29.lab vs 29.rec
+ LAB: enviar-com llame al uno cinco tres cero  nueve tres ocho seis tres nueve cero cinco seis seis cuatro uno nueve enviar-fin 
+ REC: enviar-com llame al uno cinco seis cinco nueve tres ocho seis tres nueve cero cinco seis seis cuatro uno nueve enviar-fin 
+3.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+30.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+31.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+32.rec:   84.62( 76.92)  [H=  11, D=  0, S=  2, I=  1, N= 13]
+Aligned transcription: 32.lab vs 32.rec
+ LAB: enviar-com llamar al       cero ocho dos tres seis seis tres cinco cinco enviar-fin 
+ REC: enviar-com llamar al cinco uno  tres dos tres seis seis tres cinco cinco enviar-fin 
+33.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+34.rec:  100.00( 61.29)  [H=  31, D=  0, S=  0, I= 12, N= 31]
+Aligned transcription: 34.lab vs 34.rec
+ LAB: enviar-com llamar al dos dos cuatro     cinco dos seis cinco siete cuatro     cinco cinco     nueve uno cinco         cuatro     seis dos cuatro     siete     ocho     cinco     seis     uno seis ocho ocho ocho     enviar-fin 
+ REC: enviar-com llamar al dos dos cuatro dos cinco dos seis cinco siete cuatro uno cinco cinco dos nueve uno cinco dos dos cuatro dos seis dos cuatro uno siete dos ocho dos cinco dos seis uno uno seis ocho ocho ocho dos enviar-fin 
+35.rec:   60.00( 60.00)  [H=   3, D=  0, S=  2, I=  0, N=  5]
+Aligned transcription: 35.lab vs 35.rec
+ LAB: enviar-com llamar a  andrea enviar-fin 
+ REC: enviar-com llamar al seis   enviar-fin 
+36.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+37.rec:  100.00(100.00)  [H=  13, D=  0, S=  0, I=  0, N= 13]
+38.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+39.rec:   83.33( 55.56)  [H=  15, D=  0, S=  3, I=  5, N= 18]
+Aligned transcription: 39.lab vs 39.rec
+ LAB: enviar-com llamar al cero  ocho uno     nueve         dos cero  ocho cero uno     cuatro dos ocho cero  nueve       enviar-fin 
+ REC: enviar-com llamar al cinco ocho uno dos nueve dos dos dos cinco ocho cero uno dos cuatro dos ocho cinco nueve cinco enviar-fin 
+4.rec:   87.50( 62.50)  [H=   7, D=  0, S=  1, I=  2, N=  8]
+Aligned transcription: 4.lab vs 4.rec
+ LAB: enviar-com llame al cuatro tres       siete cinco     enviar-fin 
+ REC: enviar-com llame al cuatro tres cinco tres  cinco dos enviar-fin 
+40.rec:   84.62( 61.54)  [H=  11, D=  0, S=  2, I=  3, N= 13]
+Aligned transcription: 40.lab vs 40.rec
+ LAB: enviar-com llamar al cero  nueve seis cuatro     tres     ocho tres cuatro     siete enviar-fin 
+ REC: enviar-com llamar al cinco nueve seis cuatro uno tres dos tres tres cuatro uno siete enviar-fin 
+41.rec:   92.86( 67.86)  [H=  26, D=  0, S=  2, I=  7, N= 28]
+Aligned transcription: 41.lab vs 41.rec
+ LAB: enviar-com llame al dos uno dos ocho     dos dos seis dos     uno siete seis cuatro     cuatro           cero  cero cero seis cinco cinco seis ocho cuatro     cuatro     dos enviar-fin 
+ REC: enviar-com llame al dos uno dos ocho dos dos dos seis dos uno uno siete seis cuatro uno cuatro dos siete cinco dos  cero seis cinco cinco seis ocho cuatro uno cuatro dos dos enviar-fin 
+42.rec:   91.30( 52.17)  [H=  21, D=  0, S=  2, I=  9, N= 23]
+Aligned transcription: 42.lab vs 42.rec
+ LAB: enviar-com llamar al     uno     dos dos ocho cuatro       cuatro siete     uno siete cuatro     ocho uno      seis seis cero     tres        ocho cinco     siete enviar-fin 
+ REC: enviar-com llamar al uno uno dos dos dos tres cuatro cinco cuatro siete uno uno siete cuatro dos ocho uno seis seis seis cero dos tres cuatro dos  cinco dos siete enviar-fin 
+43.rec:   60.00( 60.00)  [H=   3, D=  0, S=  2, I=  0, N=  5]
+Aligned transcription: 43.lab vs 43.rec
+ LAB: enviar-com llamar a  andrea enviar-fin 
+ REC: enviar-com llamar al seis   enviar-fin 
+44.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+45.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+46.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+47.rec:   95.00( 70.00)  [H=  19, D=  0, S=  1, I=  5, N= 20]
+Aligned transcription: 47.lab vs 47.rec
+ LAB: enviar-com llame al cinco     uno     siete ocho   cuatro siete cinco cuatro     uno tres tres cero     dos ocho     uno siete enviar-fin 
+ REC: enviar-com llame al cinco uno uno dos siete cuatro cuatro siete cinco cuatro uno uno tres tres cero dos dos ocho uno uno siete enviar-fin 
+48.rec:  100.00( 63.64)  [H=  11, D=  0, S=  0, I=  4, N= 11]
+Aligned transcription: 48.lab vs 48.rec
+ LAB: enviar-com llame al siete     seis tres seis cuatro     uno     nueve     enviar-fin 
+ REC: enviar-com llame al siete dos seis tres seis cuatro dos uno dos nueve uno enviar-fin 
+49.rec:   60.00( 40.00)  [H=   3, D=  0, S=  2, I=  1, N=  5]
+Aligned transcription: 49.lab vs 49.rec
+ LAB: enviar-com llamar    a     juana enviar-fin 
+ REC: enviar-com llamar al nueve uno   enviar-fin 
+5.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+50.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+51.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+52.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+53.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+54.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+55.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+56.rec:   50.00( 50.00)  [H=   3, D=  0, S=  3, I=  0, N=  6]
+Aligned transcription: 56.lab vs 56.rec
+ LAB: enviar-com llamar a  andrea perez enviar-fin 
+ REC: enviar-com llamar al seis   seis  enviar-fin 
+57.rec:   50.00( 33.33)  [H=   3, D=  0, S=  3, I=  1, N=  6]
+Aligned transcription: 57.lab vs 57.rec
+ LAB: enviar-com llame    a    andrea perez enviar-fin 
+ REC: enviar-com llame al seis dos    seis  enviar-fin 
+58.rec:  100.00( 83.33)  [H=  18, D=  0, S=  0, I=  3, N= 18]
+Aligned transcription: 58.lab vs 58.rec
+ LAB: enviar-com llamar al dos dos     uno tres seis cuatro dos cinco dos seis tres cuatro     uno ocho     enviar-fin 
+ REC: enviar-com llamar al dos dos uno uno tres seis cuatro dos cinco dos seis tres cuatro uno uno ocho dos enviar-fin 
+59.rec:   86.67( 80.00)  [H=  13, D=  0, S=  2, I=  1, N= 15]
+Aligned transcription: 59.lab vs 59.rec
+ LAB: enviar-com llame al ocho     dos cinco cero  cuatro ocho seis siete cero  cinco seis enviar-fin 
+ REC: enviar-com llame al ocho uno dos cinco cinco cuatro ocho seis siete cinco cinco seis enviar-fin 
+6.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+60.rec:   93.75( 75.00)  [H=  15, D=  0, S=  1, I=  3, N= 16]
+Aligned transcription: 60.lab vs 60.rec
+ LAB: enviar-com llamar al cuatro     cinco ocho cuatro cuatro     siete cinco     cuatro cinco cero  tres siete enviar-fin 
+ REC: enviar-com llamar al cuatro uno cinco ocho cuatro cuatro dos siete cinco dos cuatro cinco cinco tres siete enviar-fin 
+61.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+62.rec:  100.00( 92.86)  [H=  14, D=  0, S=  0, I=  1, N= 14]
+Aligned transcription: 62.lab vs 62.rec
+ LAB: enviar-com llamar al nueve dos tres cuatro     tres tres cuatro cuatro cinco siete enviar-fin 
+ REC: enviar-com llamar al nueve dos tres cuatro dos tres tres cuatro cuatro cinco siete enviar-fin 
+63.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+64.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+65.rec:  100.00( 69.23)  [H=  26, D=  0, S=  0, I=  8, N= 26]
+Aligned transcription: 65.lab vs 65.rec
+ LAB: enviar-com llame al cinco     siete dos siete uno ocho seis nueve seis dos siete cero siete siete     cero     cinco      siete       cuatro     ocho     siete ocho cinco     enviar-fin 
+ REC: enviar-com llame al cinco uno siete dos siete uno ocho seis nueve seis dos siete cero siete siete dos cero dos cinco tres siete cinco cuatro uno ocho dos siete ocho cinco dos enviar-fin 
+66.rec:   80.00( 80.00)  [H=   4, D=  0, S=  1, I=  0, N=  5]
+Aligned transcription: 66.lab vs 66.rec
+ LAB: enviar-com llame a pedro    enviar-fin 
+ REC: enviar-com llame a patricia enviar-fin 
+67.rec:   60.00( 60.00)  [H=   3, D=  0, S=  2, I=  0, N=  5]
+Aligned transcription: 67.lab vs 67.rec
+ LAB: enviar-com llame a  andrea enviar-fin 
+ REC: enviar-com llame al seis   enviar-fin 
+68.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+69.rec:   80.00( 80.00)  [H=   4, D=  0, S=  1, I=  0, N=  5]
+Aligned transcription: 69.lab vs 69.rec
+ LAB: enviar-com comuniqueme con andrea   enviar-fin 
+ REC: enviar-com comuniqueme con patricia enviar-fin 
+7.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+70.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+71.rec:  100.00( 85.71)  [H=   7, D=  0, S=  0, I=  1, N=  7]
+Aligned transcription: 71.lab vs 71.rec
+ LAB: enviar-com llamar al     tres cinco dos enviar-fin 
+ REC: enviar-com llamar al dos tres cinco dos enviar-fin 
+72.rec:   83.33( 83.33)  [H=   5, D=  0, S=  1, I=  0, N=  6]
+Aligned transcription: 72.lab vs 72.rec
+ LAB: enviar-com llame  al ocho siete enviar-fin 
+ REC: enviar-com llamar al ocho siete enviar-fin 
+73.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+74.rec:   87.50( 87.50)  [H=  14, D=  0, S=  2, I=  0, N= 16]
+Aligned transcription: 74.lab vs 74.rec
+ LAB: enviar-com llame al cero  siete cero ocho siete cinco seis cero tres siete ocho tres enviar-fin 
+ REC: enviar-com llame al cinco siete cero dos  siete cinco seis cero tres siete ocho tres enviar-fin 
+75.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+76.rec:   89.47( 76.32)  [H=  34, D=  0, S=  4, I=  5, N= 38]
+Aligned transcription: 76.lab vs 76.rec
+ LAB: enviar-com llamar al cuatro ocho ocho cuatro seis siete dos ocho ocho siete seis     uno       cinco cero  siete cinco cuatro cuatro cero     dos nueve siete            cero uno siete siete tres siete siete siete cero cuatro siete siete enviar-fin 
+ REC: enviar-com llamar al cuatro ocho ocho cuatro seis siete dos ocho ocho siete seis uno uno cinco cinco cinco seis  cinco cuatro cuatro cero dos dos nueve siete seis cinco uno  uno siete siete seis siete siete siete cero cuatro siete siete enviar-fin 
+77.rec:  100.00( 50.00)  [H=  10, D=  0, S=  0, I=  5, N= 10]
+Aligned transcription: 77.lab vs 77.rec
+ LAB: enviar-com llamar al      ocho     uno     ocho      ocho      nueve cuatro enviar-fin 
+ REC: enviar-com llamar al cero ocho dos uno dos ocho cero ocho tres nueve cuatro enviar-fin 
+78.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+79.rec:  100.00( 66.67)  [H=   9, D=  0, S=  0, I=  3, N=  9]
+Aligned transcription: 79.lab vs 79.rec
+ LAB: enviar-com llamar al tres cinco     ocho     seis tres     enviar-fin 
+ REC: enviar-com llamar al tres cinco dos ocho dos seis tres dos enviar-fin 
+8.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+80.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+81.rec:  100.00( 80.00)  [H=   5, D=  0, S=  0, I=  1, N=  5]
+Aligned transcription: 81.lab vs 81.rec
+ LAB: enviar-com comuniqueme con pedro           enviar-fin 
+ REC: enviar-com comuniqueme con pedro rodriguez enviar-fin 
+82.rec:   94.44( 61.11)  [H=  17, D=  0, S=  1, I=  6, N= 18]
+Aligned transcription: 82.lab vs 82.rec
+ LAB: enviar-com llame al uno cinco          cero ocho dos tres dos uno     dos uno     tres cinco dos cinco         enviar-fin 
+ REC: enviar-com llame al uno cinco uno seis dos  ocho dos tres dos uno dos dos uno dos tres cinco dos cinco dos dos enviar-fin 
+83.rec:  100.00( 38.46)  [H=  13, D=  0, S=  0, I=  8, N= 13]
+Aligned transcription: 83.lab vs 83.rec
+ LAB: enviar-com llamar al cinco     nueve     cinco     cinco     siete              dos cero     dos tres enviar-fin 
+ REC: enviar-com llamar al cinco uno nueve dos cinco dos cinco uno siete seis uno dos dos cero dos dos tres enviar-fin 
+84.rec:   85.71( 42.86)  [H=   6, D=  0, S=  1, I=  3, N=  7]
+Aligned transcription: 84.lab vs 84.rec
+ LAB: enviar-com llame al     siete          cero uno enviar-fin 
+ REC: enviar-com llame al dos siete seis dos uno  uno enviar-fin 
+85.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+86.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+87.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+88.rec:  100.00( 87.50)  [H=   8, D=  0, S=  0, I=  1, N=  8]
+Aligned transcription: 88.lab vs 88.rec
+ LAB: enviar-com llamar al cuatro     seis siete tres enviar-fin 
+ REC: enviar-com llamar al cuatro uno seis siete tres enviar-fin 
+89.rec:   83.33( 66.67)  [H=   5, D=  0, S=  1, I=  1, N=  6]
+Aligned transcription: 89.lab vs 89.rec
+ LAB: enviar-com llame al tres       cero enviar-fin 
+ REC: enviar-com llame al tres siete uno  enviar-fin 
+9.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+90.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+91.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+92.rec:  100.00(100.00)  [H=   8, D=  0, S=  0, I=  0, N=  8]
+93.rec:  100.00( 85.71)  [H=   7, D=  0, S=  0, I=  1, N=  7]
+Aligned transcription: 93.lab vs 93.rec
+ LAB: enviar-com llame al      ocho dos cero enviar-fin 
+ REC: enviar-com llame al cero ocho dos cero enviar-fin 
+94.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+95.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+96.rec:  100.00(100.00)  [H=   6, D=  0, S=  0, I=  0, N=  6]
+97.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+98.rec:  100.00( 75.00)  [H=  16, D=  0, S=  0, I=  4, N= 16]
+Aligned transcription: 98.lab vs 98.rec
+ LAB: enviar-com llamar al     cinco     siete cero     cinco     dos uno dos tres siete uno seis nueve enviar-fin 
+ REC: enviar-com llamar al dos cinco uno siete cero dos cinco dos dos uno dos tres siete uno seis nueve enviar-fin 
+99.rec:  100.00(100.00)  [H=   5, D=  0, S=  0, I=  0, N=  5]
+------------------------ Overall Results --------------------------
+SENT: %Correct=58.00 [H=116, S=84, N=200]
+WORD: %Corr=94.68, Acc=83.32 [H=1816, D=1, S=101, I=218, N=1918]
+===================================================================
