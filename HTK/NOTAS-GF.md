@@ -56,23 +56,22 @@ Se vuelve a utilizar el archivo _global.ded_, que es un archivo de edición del 
 
 ## El _libreto_
 
-dictgf (all the words and their phonetics) and 
-wordnet.gf (the word net with their connections) generate random phrases
+Lo que nos hace falta ahora es algo donde esté escrito qué es lo que debemos decir al micrófono para luego poder reconocerlo, y esto es lo que se denomina _el libreto_ (o _prompts_ en inglés). Se utilizará un nuevo comando `HSGen` que toma como _inputs_ al diccionario creado en el paso anterior, y a lista de palabras (_wordnet_), para crear una cantidad variada de frases teniendo en cuenta la gramática propuesta. En este caso se generarán 200 frases.
 
 ```bash
 $ HSGen -l -n 200 wordnet.gf dictgf > promptsgf.test
 ```
 
+Como analogía con el reconocedor de habla general, la base de datos de _latinos-40_ ya traía estos archivos para el _set_ de _train_ y el de _test_ para que luego nosotros podamos entrenarlo y reconocer las frases grabadas. Ahora nosotrosi, queremos grabar las frases a partir de este libreto.
+
 
 ## Grabación y conversión a coeficientes _MFCC_
 
-### Generate genmfc.gf mapping for HCopy input
+Una vez grabadas todas las frases del _libreto_ en formato _WAV_ y a 16KHz como frecuencia de muestro, se deben convertir (o mejor dicho parametrizar) estas grabaciones a sus respectivos coeficientes _cepstrum_ o _MFCC_. Esto se logra, al igual que en el caso anterior, mediante el comando `HCopy` y utilizando el _script_ `go.genmfcgf` para crear un _mapping_ entre los archivos _.wav_ y los archivos _.mfc_. Es interesante destacar que para el archivo de configuración para `HCopy` fue necesario cambiar el atributo _SOURCEFORMAT_ a _WAV_ en vez del utilizado anteriormente _NIST_.
 
 ```bash
 $ go.genmfcgf genmfc.gf
-```
 
-```bash
 $ HCopy -A -V -T 1 -C gf.config.hcopy -S genmfc.gf 
 ```
 
