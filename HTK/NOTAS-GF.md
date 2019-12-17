@@ -78,31 +78,58 @@ $ HCopy -A -V -T 1 -C gf.config.hcopy -S genmfc.gf
 
 ## Reconocimiento
 
+Nuevamente para el reconocimiento se utilizará el comando de _HTK_ llamado _HVite_. De igual forma que cuando se reconocía habla en general, es necesario que le pasemos a este comando, los modelos que se utilizaron en la etapa de entrenamiento, el diccionario, los fonemas utilizados y la red de palabras. Por último también hace falta un archivo que contenga los coeficientes _cepstrum_ de cada una de las grabaciones el cual se identifica como _testgf.scp_.
+
 ```bash
 $ ls ../datos-gf/mfc/*.mfc > testgf.scp
 ```
 
 ```bash
-$ HVite -C config -H hmm-256-3/macros -H hmm-256-3/hmmdefs -S testgf.scp \
+$ HVite -C config -H hmm/macros -H hmm/hmmdefs -S testgf.scp \
 	-l '*' -i recout-gf.mlf -w wordnet.gf -p 0.0 -s 5.0 \
 	dictgf monophones+sil
 ```
 
+Cabe destacar, que este comando no sólo realiza el algoritmo de _Viterbi_ en sí, sino que también realiza una etapa de inicialización en la cual se construye toda la red estados posibles y por ende la correspondiente matriz de transición, esta vez teniendo en cuenta que todas las transiciones son equiprobables. Luego se ejecuta el algoritmo en cuestión, y finalmente se pasa a una etapa de decodificación en la cual se encuentra la secuencia de palabras de la secuencia de estados óptima de cada frase.
+
 
 ## Resultados
 
-# Convert prompts into MLF-words
+Los resultados que se obtuvieron correponden utilizar los modelos entrenados con 64, 128 y 256 _Gaussianas_ generados a partir de el entrenamiento con la base de datos _latinos-40_. Pero para esto, primero hay que generar ciertos archivos que son necesarios, ellos son:
+
+- Archivos en el formato _MLF_ del _HTK_
+
+Se utiliza el _script_ proporcionado por la cátedra llamado `prompts2mlf`.
+
 ```bash
 $ prompts2mlf mlfwordsgf.test promptsgf.test
 ```
 
-# Create vocabulary
+- Vocabulario
+
+Es necesario, al igual que lo fue en habla en general, tener un vocabulario con todas las palabras posibles de cada una de las frases sin repetir.
+
 ```bash
 $ cat promptsgf.test | awk '{for(i=2;i<=NF;i++){print $i}}' | sort | uniq > vocab.gf
 ```
 
-# Show and count results
+Por último, se ejecuta el comando `HResults` de _HTK_, de la siguiente forma:
+
 ```bash
 $ HResults -f -t -I mlfwordsgf.test vocab.gf recout-gf.mlf
 ```
+
+A continuación se muestran los resultados obtenidos para cada una de las _Gaussianas_ elegidas anteriormente.
+
+- 64 _Gaussianas_
+	- Oraciones: 58.00%
+	- Palabras: 94.68%
+- 128 _Gaussianas_
+	- Oraciones: 59.50%
+	- Palabras: 93.17%
+- 256 _Gaussianas_
+	- Oraciones: 56.50%
+	- Palabras: 90.62%
+
+Como se puede apreciar, el mejor modelo para oraciones resulta ser el que utiliza 128 _Gaussianas_, pero el mejor para palabras es el que utiliza 64 _Gaussianas_.
 
