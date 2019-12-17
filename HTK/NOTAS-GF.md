@@ -40,7 +40,7 @@ De acuerdo con ésto, existen dos variables llamadas `digit` y `name` cuyos valo
 $ HParse grammar wordnet.gf
 ```
 
-Se utiliza un nuevo comando llamado `HParse` que toma como _input_ la gramática creada en el paso anterior, y construye una red de palabras análoga a la red que se debía crear con el modelo de lenguaje estadísitico de bigramas. En este caso no es relevante que se disponga de un modelo estadísitico de bigramas ya que lo que se desea es que las transiciones sean equiprobables y que todas las frases tengan la misma opurtunidad de aparecer. Esta característica no es común a todas a las gramáticas finitas, ya que se podría requerir que dentro de la red de palabras reducidas algunas transiciones sean más probables que otras.
+Se utiliza un nuevo comando llamado `HParse` que toma como _input_ la gramática creada en el paso anterior, y construye una red de palabras análoga a la red que se debía crear con el modelo de lenguaje estadístico de _bigramas_. En este caso no es relevante que se disponga de un modelo estadístico de _bigramas_ ya que lo que se desea es que las transiciones sean equiprobables y que todas las frases tengan la misma oportunidad de aparecer. Esta característica no es común a todas a las gramáticas finitas, ya que se podría requerir que dentro de la red de palabras reducidas algunas transiciones sean más probables que otras.
 
 
 ## Creación de un diccionario
@@ -62,7 +62,7 @@ Lo que nos hace falta ahora es algo donde esté escrito qué es lo que debemos d
 $ HSGen -l -n 200 wordnet.gf dictgf > promptsgf.test
 ```
 
-Como analogía con el reconocedor de habla general, la base de datos de _latinos-40_ ya traía estos archivos para el _set_ de _train_ y el de _test_ para que luego nosotros podamos entrenarlo y reconocer las frases grabadas. Ahora nosotrosi, queremos grabar las frases a partir de este libreto.
+Como analogía con el reconocedor de habla general, la base de datos de _latinos-40_ ya traía estos archivos para el _set_ de _train_ y el de _test_ para que luego nosotros podamos entrenarlo y reconocer las frases grabadas. Ahora nosotros, queremos grabar las frases a partir de este libreto.
 
 
 ## Grabación y conversión a coeficientes _MFCC_
@@ -95,7 +95,7 @@ Cabe destacar, que este comando no sólo realiza el algoritmo de _Viterbi_ en s�
 
 ## Resultados
 
-Los resultados que se obtuvieron correponden utilizar los modelos entrenados con 64, 128 y 256 _Gaussianas_ generados a partir de el entrenamiento con la base de datos _latinos-40_. Pero para esto, primero hay que generar ciertos archivos que son necesarios, ellos son:
+Los resultados que se obtuvieron corresponden utilizar los modelos entrenados con 64, 128 y 256 _Gaussianas_ generados a partir de el entrenamiento con la base de datos _latinos-40_. Pero para esto, primero hay que generar ciertos archivos que son necesarios, ellos son:
 
 - Archivos en el formato _MLF_ del _HTK_
 
