@@ -4,7 +4,7 @@ author:
 - Patricio Iribarne Catella
 - Procesamiento del Habla (66.43) - FIUBA
 date:
-- 16 de Diciembre, 2019
+- 17 de Diciembre, 2019
 theme:
 - Copenhagen
 ---
