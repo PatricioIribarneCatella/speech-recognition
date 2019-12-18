@@ -8,6 +8,7 @@ def plot(X, Y, kwargs):
     xlabel = None
     ylabel = None
     show = False
+    pictfmt = "svg"
 
     if "title" in kwargs:
         title = kwargs["title"]
@@ -19,6 +20,8 @@ def plot(X, Y, kwargs):
         ylabel = kwargs["ylabel"]
     if "show" in kwargs:
         show = kwargs["show"]
+    if "pictfmt" in kwargs:
+        pictfmt= kwargs["pictfmt"]
 
     fig, ax = plt.subplots()
     
@@ -29,7 +32,7 @@ def plot(X, Y, kwargs):
     if show:
         plt.show()
     else:
-        plt.savefig("{}.svg".format(name))
+        plt.savefig("{}.{}".format(name, pictfmt))
 
 def plot_xtrogram(t, f, Sxx, Fs, kwargs):
 
