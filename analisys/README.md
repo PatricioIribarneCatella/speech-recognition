@@ -1,5 +1,11 @@
 # analisys
 
+## Notebook
+
+```bash
+$ jupyter notebook
+```
+
 ## Tests
 
 ```bash
