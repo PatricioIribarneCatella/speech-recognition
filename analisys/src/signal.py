@@ -1,10 +1,14 @@
+import sys
 import numpy as np
 
+from os import path
 from scipy.signal import spectrogram, freqz, lfilter
 from scipy.linalg import toeplitz, inv
 
-from plotting import plot, plot_xtrogram
-from utils import fft, ifft, sampler, load, export
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+
+from src.plotting import plot, plot_xtrogram
+from src.utils import fft, ifft, sampler, load, export
 
 class Signal(object):
 
